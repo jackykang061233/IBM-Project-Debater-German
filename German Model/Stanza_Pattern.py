@@ -27,7 +27,9 @@ class Stanza_Pattern:
         1. Do the sentence segmentation of the text
         2. Add the dc to the regex pattern
         3. Extract the pattern from each sentence
-        4. Loop through all the matches and get the EC and the whole matched sentences
+        4. Loop through all the matches and get the EC
+        5. check the Genetiv
+        6. getthe whole matched sentences
     pattern_extraction_sentence(sentence, pattern):
         This method uses the token-level regular expression to match our desired patterns
     pattern_dc_construction(dc, pattern):
@@ -53,7 +55,19 @@ class Stanza_Pattern:
             the stanza german pipeline
         """
         self.client = CoreNLPClient(properties='german', annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'parse'], timeout=30000, memory='16G')
-        self.pattern = ['/ist/ /ein|eine/', '/ist/ /ein/ /Beispiel/ /für/', '/ist/ /eine/ /Form/ /des|der|von|vom/', '/oder/ /andere/ /Arten/ /des|der|von|vom/', '/oder/ /eine/ /andere/ /Art/ /des|der|von|vom/']
+        self.pattern = ['/ist/ /ein|eine/',
+                        '/ist/ /eine/ /Art/ /des|der|von|vom/',
+                        '/ist/ /eine/ /Form/ /des|der|von|vom/',
+                        '/ist/ /ein/ /Beispiel/ /für/',
+                        '/ist/ /ein/ /Spezialfall/ /des|der|von|vom/',
+                        '/oder/ /andere/ /Arten/ /des|der|von|vom/',
+                        '/oder/ /eine/ /andere/ /Art/ /des|der|von|vom/',
+                        '/oder/ /ander|andere|anderes/',
+                        '/und/ /ander|andere|anderes/',
+                        '/und/ /andere/ /Arten/ /des|der|von|vom/'
+                        # '/einschließlich',
+                        # '/inklusive'
+                        ]
         self.nlp_spacy = spacy.load("de_core_news_sm")
         self.nlp_stanza = stanza.Pipeline(lang='de', processors='tokenize, mwt, lemma, pos, depparse')
 
@@ -126,13 +140,15 @@ class Stanza_Pattern:
         # print(child)
         # print(child_root)
 
-    def pattern_extraction_text(self, text, dc, pattern):
+    def pattern_extraction_text(self, sentences, dc, pattern):
         """
         This method consists of several parts:
         1. Do the sentence segmentation of the text
         2. Add the dc to the regex pattern
         3. Extract the pattern from each sentence
-        4. Loop through all the matches and get the EC and the whole matched sentences
+        4. Loop through all the matches and get the EC
+        5. check the Genetiv
+        6. getthe whole matched sentences
 
         Parameters
         ----------
@@ -149,23 +165,34 @@ class Stanza_Pattern:
             a list contains of every pair of matched (dc, ec, whole sentence)
 
         """
-        sentences = self.sent_segmentation(text)  # sentence segmentation
         pattern_dc = self.pattern_dc_construction(dc, pattern)  # concatenate dc and pattern
 
         list_rows = []  # store the every pair of (dc, ec, whole sentence)
         for sent in sentences:
             match = self.pattern_extraction_sentence(sent, pattern_dc)  # find the match from the pattern
             dependency_parse = self.stanza_processor_sentence(sent)  # the dependency parser of the sentence
-
             for index in range(match["sentences"][0]["length"]):
                 begin = match['sentences'][0][str(index)]["begin"]  # get the beginning index of each matched sentence
                 end = match['sentences'][0][str(index)]["end"]  # get the end index of each matched sentence
 
                 head = dependency_parse[0].words[end-1].head  # the head of the end index word is our potential EC
+                print(dependency_parse)
+
                 ec = " ".join([dependency_parse[0].words[i].text for i in range(end, head)])  # get EC
 
-                whole_sentence = [dependency_parse[0].words[i].text for i in range(begin, head)]  # get our whole matched sentence
+                # This part of code will try to determine
+                if dependency_parse[0].words[head].feats is not None and dependency_parse[0].words[head].feats[:9] == 'Case=Gen|':
+                    for i in range(head, len(dependency_parse[0].words)):
+                        ec += ' '
+                        ec += dependency_parse[0].words[i].text
+                        if  dependency_parse[0].words[i].head == head:
+                            end_of_sentence = i
+                            break
+
+                whole_sentence = [dependency_parse[0].words[i].text for i in range(begin, end)]  # get our whole matched sentence till end
                 whole_sentence = " ".join(whole_sentence)
+                whole_sentence += ' '
+                whole_sentence += ec  # plus the ec
 
                 dict_row = {'DC': dc, 'EC': ec, 'Whole Sentence': whole_sentence}  # put in the dict
                 list_rows.append(dict_row)
@@ -232,21 +259,17 @@ class Stanza_Pattern:
 
        """
         list_rows = []
+        # dc_list = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic.csv", index_col=0)
+        sentences = self.sent_segmentation(text)  # sentence segmentation
         for pattern in self.pattern:
-            list_rows += self.pattern_extraction_text(text, 'Das', pattern)
+            # for dc in dc_list.index:
+            list_rows += self.pattern_extraction_text(sentences, 'SSO', pattern)
         extracted_sentences = pd.DataFrame(list_rows)
         print(extracted_sentences)
 
 
 if __name__ == '__main__':
     text = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles_de/" + "Waffenkontrolle (Recht)" + ".txt").read()
-    database = [
-        "Der Freiwilligendienst ist eine Form von freiwilligen Aktivitäten und weist folgende zusätzliche Merkmale auf",
-        "Eidetic IntuitionenIntuition soll eine Form des direkten Zugriffs sein.",
-        "Vortäuschen ist eine Form der Lüge.",
-        "Betrachtet diese Methode als eine Form des spirituellen Hausputzes.",
-        "Der Streit ist ja auch eine Form von Begegnung.",
-        "Das ist im Grunde genommen eine Form der Prokrastination."]
     database = "Der Freiwilligendienst ist eine Form von freiwilligen Aktivitäten und weist folgende zusätzliche " \
                "Merkmale auf, Eidetic IntuitionenIntuition soll eine Form des direkten Zugriffs sein. Das ist eine " \
                "Form der Lüge. Betrachtet diese Methode als eine Form des spirituellen Hausputzes. Der Streit ist ja " \
@@ -258,8 +281,9 @@ if __name__ == '__main__':
                "Das oder andere Arten der Ausstattung mit Regalen." \
                "Dieser Eintrag kann für ein Land, eine Organisation oder eine andere Art von Gruppierung stehen." \
                "Wenn Sie ein Dokument oder eine andere Art von Datei an einen Drucker senden, entsteht daraus ein Druckauftrag." \
-               "Die Router verfügen über das oder eine andere Art von starke Internetverbindung mit dem Internet."
-
+               "Die Router verfügen über das oder eine andere Art von starke Internetverbindung mit dem Internet." \
+               "SSO ist eine Art von Zugriffskontrolle der Softwaresysteme"
+    #database = 'Verwaltungsaufgaben, inklusive Materialhandhabung, Computerarbeit und Kopieren.'
     S = Stanza_Pattern()
     # print(S.tokenization('Der Freiwilligendienst'))
     S.process(database)
