@@ -7,6 +7,7 @@ import stanza
 from stanza.server import CoreNLPClient
 # basic functions
 import pandas as pd
+from Translator import LibreTranslateAPI
 pd.set_option('display.max_columns', 10)  # show at most 10 columns
 
 
@@ -41,8 +42,6 @@ class Stanza_Pattern:
     process(text):
         This method performs the pattern matching process
     """
-    # '([lemma: sein]?) /eine/ /form/ /des|der|von|vom/ '
-    # ' /,?/ /oder/ /andere/ /Arten/ /des|der|von|vom/'
     def __init__(self):
         """
         Parameters
@@ -56,22 +55,26 @@ class Stanza_Pattern:
         nlp_stanza:
             the stanza german pipeline
         """
-        self.client = CoreNLPClient(properties='german', annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'parse'], timeout=30000, memory='16G')
-        self.pattern = ['/ist/ /ein|eine/',
-                        '/ist/ /eine/ /Art/ /des|der|von|vom/',
-                        '/ist/ /eine/ /Form/ /des|der|von|vom/',
-                        '/ist/ /ein/ /Beispiel/ /für/',
-                        '/ist/ /ein/ /Spezialfall/ /des|der|von|vom/',
-                        '/oder/ /andere/ /Arten/ /des|der|von|vom/',
-                        '/oder/ /eine/ /andere/ /Art/ /des|der|von|vom/',
-                        '/oder/ /ander|andere|anderes/',
-                        '/und/ /ander|andere|anderes/',
-                        '/und/ /andere/ /Arten/ /des|der|von|vom/'
+        self.client = CoreNLPClient(properties='english', annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'parse'], timeout=30000, memory='16G')
+        self.pattern = ['/is/ /a|an/',
+                        '/is/ /a/ /kind/ /of/',
+                        '/is/ /an/ /form/ /of/',
+                        '/is/ /an/ /example/ /of/',
+                        '/is/ /a/ /special/ /case/ /of/',
+                        '/or/ /other/ /types/ /of/',
+                        '/or/ /another/ /type/ /of/',
+                        '/or/ /other/ /kinds/ /of/',
+                        '/or/ /other/',
+                        '/and/ /other/',
+                        '/and/ /other/ /types/ /of/',
+                        '/and/ /other/ /kinds/ /of/'
                         # '/einschließlich',
                         # '/inklusive'
                         ]
-        self.nlp_spacy = spacy.load("de_core_news_sm")
-        self.nlp_stanza = stanza.Pipeline(lang='de', processors='tokenize, mwt, lemma, pos, depparse')
+
+
+        self.nlp_spacy = spacy.load("en_core_web_sm")
+        self.nlp_stanza = stanza.Pipeline(lang='en', processors='tokenize, mwt, lemma, pos, depparse')
 
     def sent_segmentation(self, text):
         """
@@ -173,6 +176,7 @@ class Stanza_Pattern:
         for sent in sentences:
             match = self.pattern_extraction_sentence(sent, pattern_dc)  # find the match from the pattern
             dependency_parse = self.stanza_processor_sentence(sent)  # the dependency parser of the sentence
+
             for index in range(match["sentences"][0]["length"]):
                 begin = match['sentences'][0][str(index)]["begin"]  # get the beginning index of each matched sentence
                 end = match['sentences'][0][str(index)]["end"]  # get the end index of each matched sentence
@@ -181,8 +185,9 @@ class Stanza_Pattern:
 
                 ec = " ".join([dependency_parse[0].words[i].text for i in range(end, head)])  # get EC
 
+
                 # This part of code will try to determine
-                if dependency_parse[0].words[head].feats is not None and dependency_parse[0].words[head].feats[:9] == 'Case=Gen|':
+                if dependency_parse[0].words[head].text == 'of':
                     for i in range(head, len(dependency_parse[0].words)):
                         ec += ' '
                         ec += dependency_parse[0].words[i].text
@@ -267,9 +272,7 @@ class Stanza_Pattern:
 
        """
         list_rows = []
-        # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de.pkt", "rb") as f:
-        #     extracted_sentences = pickle.load(f)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_de_libre_shorten.pkt", "rb") as f:
+        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_re_en.pkt", "rb") as f:
             extracted_sentences = pickle.load(f)
         for dc, sentences in extracted_sentences.items():
             for pattern in self.pattern:
@@ -278,40 +281,44 @@ class Stanza_Pattern:
         extracted_sentences = pd.DataFrame(list_rows)
         print(extracted_sentences)
         extracted_sentences = self.clean_ec(extracted_sentences)
-        extracted_sentences.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de_libre_shorten_v1.csv")
+        extracted_sentences.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept/concept_v1.csv")
 
 
 if __name__ == '__main__':
-    spacy = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_%s.csv" % 'spacy', index_col=0)
-    fasttext = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_%s.csv" % 'fasttext', index_col=0)
-    print(spacy.distributional_similarity.values,sep=", ")
-    print(fasttext.distributional_similarity.values,sep=", ")
     #text = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles_de/" + "Waffenkontrolle (Recht)" + ".txt").read()
 
-    #database = 'Verwaltungsaufgaben, inklusive Materialhandhabung, Computerarbeit und Kopieren.'
-    #S = Stanza_Pattern()
+    # S = Stanza_Pattern()
+    # S.process()
+
     # print(S.tokenization('Der Freiwilligendienst'))
-    #S.process()
-    # a = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/filter_v1.csv", index_col=0)
-    # df1 = a[['DC', 'EC']]
-    # df1.loc[:, 'good expansion'] = 0
-    #
-    # df1.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv")
+    with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de.pkt", "rb") as f:
+        extracted_sentences = pickle.load(f)
+    a = []
+    count = 0
+    for key, value in extracted_sentences.items():
+        for v in value:
+            a.append(v)
+    with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept/concept_wiki_con_v4.pkt", "rb") as f:
+        extracted_sentences = pickle.load(f)
+    L = LibreTranslateAPI()
+    b = []
+    count = 0
+    for key, value in extracted_sentences.items():
+        for v in value:
+            translated = L.translate(v)
+            translated = translated[0].upper() + translated[1:]
+            if translated not in a:
+                print("NOT IN", translated)
+                b.append(translated)
+            else:
+                print("IN", translated)
 
-    # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_de_libre_shorten.pkt", "rb") as f:
-    #     extracted_sentences = pickle.load(f)
-    # a = []
-    # count = 0
-    # for key, value in extracted_sentences.items():
-    #     for v in value:
-    #         print(key, v)
-    # print(count)
+    with open("/Users/kangchieh/Downloads/Bachelorarbeit/not.pkt", "rb") as f:
+        pickle.dump(b, f)
+    print(b)
 
 
 
-
-
-
-    # S.pattern_extraction_text(database)
-    # print(S.pattern_extraction_sentence(database))
+    #S.pattern_extraction_text(database)
+    # print(S.pattern_extraction_text(database, 'She', '/is/ /a/ /kind/ /of/'))
 

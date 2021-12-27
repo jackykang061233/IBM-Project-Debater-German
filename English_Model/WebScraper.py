@@ -4,6 +4,7 @@ import pandas as pd
 import wikipediaapi
 
 
+
 class wikiscraper:
     """
     A class used to web scrap the wiki pages related to our debate topics
@@ -84,3 +85,4 @@ if __name__ == "__main__":
     # print(w.dc_outlink.iloc[0, 0][0])
     # df = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic_with_outlinks.csv')
     # print(df.iloc[0, -1])
+

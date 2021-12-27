@@ -1,6 +1,12 @@
 # Word2Vec
+import pickle
+
+import numpy as np
+
+from Statified_Word2vec import Statified_Word2vec
 import fasttext.util
 # cosine similarity
+import spacy
 import wikipediaapi
 from scipy import spatial
 # wordnet
@@ -12,9 +18,10 @@ pd.set_option('display.max_columns', 10)
 
 
 class Word2vec:
-    def __init__(self, df, model):
+    def __init__(self, df):
         self.df = df
-        self.model = model
+        self.model = '/Users/kangchieh/Downloads/Bachelorarbeit/cc.en.100.bin'
+        self.nlp = spacy.load('en_core_web_sm')
 
     def clean_sentence(self, sentence):
         """
@@ -32,7 +39,7 @@ class Word2vec:
             split_sentences.append(self.clean_sentence(sentence))
         return split_sentences
 
-    def embedding(self):
+    def embedding_fasttext(self):
         """ This function applies word2Vec to all the concepts"""
         word2vec = {}
         ft = fasttext.load_model(self.model)
@@ -42,6 +49,34 @@ class Word2vec:
                 word2vec[DC] = ft.get_sentence_vector(DC)
             if EC not in word2vec:  # initialize if EC not exists
                 word2vec[EC] = ft.get_sentence_vector(EC)
+        return word2vec
+
+    def embedding_spacy(self):
+        """ This function applies word2Vec to all the concepts"""
+        word2vec = {}
+        for i in range(len(self.df)):
+            DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
+            if DC not in word2vec:  # initialize if DC not exists
+                word2vec[DC] = self.nlp(DC).vector
+            if EC not in word2vec:  # initialize if EC not exists
+                word2vec[EC] = self.nlp(EC).vector
+        return word2vec
+
+    def embedding_statified(self):
+        word2vec = {}
+        s = Statified_Word2vec()
+        for i in range(len(self.df)):
+            DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
+            if DC not in word2vec:  # initialize if DC not exists
+                try:
+                    word2vec[DC] = s.word2vec(DC)
+                except KeyError:
+                    word2vec[DC] = np.zeros(768)
+            if EC not in word2vec:  # initialize if EC not exists
+                try:
+                    word2vec[EC] = s.word2vec(EC)
+                except KeyError:
+                    word2vec[EC] = np.zeros(768)
         return word2vec
 
     def cos_similarity(self, a, b):
@@ -69,12 +104,12 @@ class Wordnet:
         self.df["synset_DC"] = dc
         self.df["synset_EC"] = ec
 
-    def co_hypernym(self):
+    def co_hyponym(self):
         """ This function determines if DC a co-hypernym of EC"""
         for i in range(len(self.df)):
             DC, EC = self.df.at[i, 'synset_DC'], self.df.at[i, 'synset_EC']
-            cohyper = list(set(DC).intersection(EC))
-            if cohyper:
+            cohyponym = [syn_dc.lowest_common_hypernyms(syn_ec) for syn_dc in DC for syn_ec in EC]
+            if cohyponym:
                 self.relation.at[i, 'co-hypernym'] = 1
             else:
                 self.relation.at[i, 'co-hypernym'] = 0
@@ -126,7 +161,7 @@ class Wordnet:
         self.get_synset()
         self.hypernym()
         self.hyponym()
-        self.co_hypernym()
+        self.co_hyponym()
         self.synonym()
 
         return self.relation
@@ -151,31 +186,81 @@ class Wiki:
 
         return links.keys()
 
-    def processing(self):
+    def processing(self, path_cat=None, path_link=None):
         """ This functions process all the above functions return the number of shared values"""
         wiki = wikipediaapi.Wikipedia('en')
-        for i in range(len(self.df)):
-            DC, EC = wiki.page(self.df.at[i, 'DC']), wiki.page(self.df.at[i, 'EC'])
-            # categories
-            DC_cat, EC_cat = self.categories(DC), self.categories(EC)
+        shared_categories = {}
+        shared_links = {}
+        if path_cat is None:
+            for i in range(len(self.df)):
+                DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
+                DC_wiki, EC_wiki = wiki.page(DC), wiki.page(EC)
+                # categories
+                DC_cat, EC_cat = self.categories(DC_wiki), self.categories(EC_wiki)
 
-            # out links
-            DC_outlink, EC_outlink = self.links(DC), self.links(EC)
+                # out links
+                DC_outlink, EC_outlink = self.links(DC_wiki), self.links(EC_wiki)
 
-            shared_cat = set(DC_cat).intersection(EC_cat)
-            shared_link = set(DC_outlink).intersection(EC_outlink)
+                shared_cat = set(DC_cat).intersection(EC_cat)
+                shared_link = set(DC_outlink).intersection(EC_outlink)
 
-            self.wiki.at[i, 'shared_categories'] = len(shared_cat)
-            self.wiki.at[i, 'shared_links'] = len(shared_link)
+                shared_categories[(DC, EC)] = len(shared_cat)
+                shared_links[(DC, EC)] = len(shared_link)
 
-        return self.wiki
+            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_en.pkt",
+                      "wb") as f:
+                pickle.dump(shared_categories, f)
+            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_en.pkt",
+                      "wb") as f1:
+                pickle.dump(shared_links, f1)
+
+        else:
+            with open(path_cat, "rb") as f:
+                shared_categories = pickle.load(f)
+            with open(path_link, "rb") as f1:
+                shared_links = pickle.load(f1)
+            for i in range(len(self.df)):
+                DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
+                if (DC, EC) not in shared_categories:
+                    DC_wiki, EC_wiki = wiki.page(DC), wiki.page(EC)
+                    # categories
+                    DC_cat, EC_cat = self.categories(DC_wiki), self.categories(EC_wiki)
+
+                    # out links
+                    DC_outlink, EC_outlink = self.links(DC_wiki), self.links(EC_wiki)
+
+                    shared_cat = set(DC_cat).intersection(EC_cat)
+                    shared_link = set(DC_outlink).intersection(EC_outlink)
+
+                    shared_categories[(DC, EC)] = len(shared_cat)
+                    shared_links[(DC, EC)] = len(shared_link)
+
+            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_en.pkt",
+                      "wb") as f:
+                pickle.dump(shared_categories, f)
+            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_en.pkt",
+                      "wb") as f1:
+                pickle.dump(shared_links, f1)
 
 
 if __name__ == "__main__":
     df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_filter_number.csv", index_col=0)
     # w = Wordnet(df)
     # df = w.processing()
-    wik = Wiki(df)
+    # wiki = Wiki(df)
+    sync_dc = wn.synsets('democracy')
+    sync_ec = wn.synsets('gun')
+    print(sync_dc)
+    print(sync_ec)
+
+    hypernym_dc = [syn.hypernyms() for syn in sync_dc]
+    hypernym_ec = [syn.hypernyms() for syn in sync_ec]
+    print(hypernym_dc)
+    print(hypernym_ec)
+
+    common_hypernym = [dc.lowest_common_hypernyms(ec) for dc in sync_dc for ec in sync_ec]
+    print(common_hypernym)
+
 
 
 
