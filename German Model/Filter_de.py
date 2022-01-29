@@ -1,23 +1,42 @@
-# regular expression
+# Regular expression
 import re
-# os
-# NER
-
 import spacy
-# word2vec
+# Word2vec
 import string
 
 from HelpFunctions_de import Word2vec
-# stopwords
+# Stopwords
 from nltk.corpus import stopwords
-# basic functions
+# Basic functions
 import pickle
 import pandas as pd
 
 
 class Filter:
+    """
+    A class used to filter out the topic pairs which do not meet our requirement
+
+    Methods
+    -------
+    get_wordnet(df):
+        This method gets the four features from Germanet
+    get_sentiment(df, path):
+            This method gets the sentiment of the given topics
+    word_embedding(df):
+            This method gets the word embedding of the given topics
+    process(df, sentiment_path=None):
+            This method performs the final process of get the training features
+    """
+
     def __init__(self):
+        """
+        Parameters
+        ----------
+        spacy:
+
+        """
         self.stop_words = set(stopwords.words('german'))  # english stopwords
+
 
     def preprocess(self, df):
         df = df[df['EC'].notna()]
@@ -156,7 +175,7 @@ class Filter:
         frequency = self.frequency_ratio(dsimilarity,
                                          "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/frequency_v2.pkt")
         #frequency.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_%s.pkt" % embedding)
-
+        print(len(frequency[frequency['distributional_similarity']>0.3]))
         return frequency
 
     def filter(self, df, freq=0.01, dsim=0.2,
@@ -204,9 +223,6 @@ class Filter:
             lambda row: min(frequency[row['DC']] / frequency[row['EC']],
                             frequency[row['EC']] / frequency[row['DC']]) > freq, axis=1)]) / l)
 
-    def semantic_relatedness(self, concept):
-        pass
-
     def count_occurrences(self, word, sentence):
         return sentence.lower().count(word)
 
@@ -218,90 +234,4 @@ class Filter:
 
 
 if __name__ == "__main__":
-    # t = LibreTranslateAPI(url='https://translate.argosopentech.com/')
-    # #t = LibreTranslateAPI(url='https://translate.mentality.rip/')
-    # path = "/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/"
-    # files = [f for f in listdir(path) if isfile(join(path, f))]
-    # not_exist = []
-    # for i in range(1, 20586):
-    #     try:
-    #         text = open("/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/test_%s.txt" % i, "r",
-    #                     encoding="utf-8").read()
-    #     except:
-    #         not_exist.append(i)
-    # a = [n for n in not_exist if n > 4135]
-    # # b = [n for n in a if n >= 7350]
-    # # not_exist = reversed(not_exist)
-    #
-    # for i in a:
-    #     print(i)
-    #     sentence_length = 0
-    #     sentence = ''
-    #     translate = ''
-    #     try:
-    #         with open("/Users/kangchieh/Downloads/Bachelorarbeit/corpus/test_%s.txt" % i, 'r') as f:
-    #             lines = f.readlines()
-    #
-    #         sentences = t.sent_segmentation(lines[0])
-    #         for sent in sentences:
-    #             sentence_length += len(sent)
-    #             sentence += sent
-    #             if sentence_length > 20000:
-    #                 translate += t.translate(sentence)
-    #                 sentence_length = 0
-    #                 sentence = ''
-    #
-    #         translate += t.translate(sentence)
-    #
-    #         with open("/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/test_%s.txt" % i, "w",
-    #                   encoding="utf-8") as f:
-    #             f.write(translate)
-    #
-    #     except HTTPError:
-    #         print('Error: %s' % i)
-    #         with open("/Users/kangchieh/Downloads/Bachelorarbeit/exception_11.txt", "a",
-    #                   encoding="utf-8") as exception:
-    #             exception.write(str(i) + '\n')
-    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/filter_v1.csv",
-                     index_col=0)
-    with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/translated/topic_translation_fairseq.txt",
-              "rb") as f:
-        fairseq_dict = pickle.load(f)
-    with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/frequency_v2.pkt",
-              "rb") as f:
-        a = pickle.load(f)
-
-    df['DC'].replace(fairseq_dict, inplace=True)
-    df['EC'].replace(fairseq_dict, inplace=True)
-    count = 0
-    for i, v in enumerate(df['DC']):
-        if v not in a:
-            count += 1
-    print(count)
-    # f.processing()
-    # a = f.filter()
-    # a = a.reset_index(drop=True)
-    # a.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_sim=0.3_freq=0.01_libre_shorten.csv")
-    #
-
-    # f.frequency_ratio(df)
-    # df1 = f.filter()
-
-    # for file in files:
-    #     print(file)
-    #     min_length = float('inf')
-    #     if file == ".DS_Store" or ':' in file:
-    #         continue
-    #     try:
-    #         text = open(path + file, "r", encoding="utf-8").read()
-    #         # text_length = text.split(' ')
-    #         for p in possible_list:
-    #             text_remove = text.split(p, 1)[0]
-    #             min_length = min(len(text_remove), min_length)
-    #         min_length = min(len(text), min_length)
-    #         words_length += min_length
-    #     except FileNotFoundError:
-    #         pass
-    # print(words_length)
-
-# 10000 17500 15000 12500 20000 7500 5000 2500
+    f = Filter()

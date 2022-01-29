@@ -1,20 +1,22 @@
-# string to list
-from ast import literal_eval
+# For calculating mean of a list
+import statistics
 
 from matplotlib import pyplot as plt
+from HelpFunctions_de import Wiki, Wordnet_de, Word2vec, Sentiment_Analysis
 
-from HelpFunctions_de import Wiki, Wordnet, Word2vec, Sentiment_Analysis
-# lemmatization
-import spacy
 # sklearn
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import mean_squared_error, precision_score, recall_score
-from sklearn.metrics import f1_score
+from sklearn.metrics import mean_squared_error, precision_score, recall_score, precision_recall_curve, f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-# basic functions
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestRegressor
+# Test set stat
+from scipy import stats
+# Basic functions
 import pickle
 import numpy as np
 import pandas as pd
@@ -22,84 +24,93 @@ import pandas as pd
 
 class GetFeature:
     """
-        A class used to represent an Animal
+    A class used to get the feature of the german model, other training features like distributional similarity are
+    already included in the dataframe before performing this class
 
-        ...
-
-        Attributes
-        ----------
-        df : Dataframe
-            a formatted string to print out what the animal says
-
-        Methods
-        -------
-        get_wiki(df)
-            Prints the animals name and what sound it makes
-        get_wordnet(df)
-        sentiment(text)
-        sentiment_analysis(df)
-        load_sentiment_analysis(path, df)
-        load_distributional_similarity(path, df)
-        word_embedding(df)
-        processing()
-        """
+    Methods
+    -------
+    get_wordnet(df):
+        This method gets the four features from Germanet
+    get_sentiment(df, path):
+        This method gets the sentiment of the given topics
+    word_embedding(df):
+        This method gets the word embedding of the given topics
+    process(df, sentiment_path=None):
+        This method performs the final process of get the training features
+    """
 
     def __init__(self):
-        """
-        Parameters
-        ----------
-        df : Dataframe
-            A Dataframe consists of
-            1. DC
-            2. EC
-            3. stop_words
-            4. substring
-            5. ner
-            6. distributional_similarity
-            7. DC_freq
-            8. EC_freq
-            9. good expansion
-            10. DC_embedding
-            11. EC_embedding
-            12. shared_categories
-            13. shared_links
-            14. hypernym
-            15. hyponym
-            16. co-hypernym
-            17. synonym
-            18. DC_Polarity_diff
-            19. EC_Polarity_diff
-            20. freq_ratio
-        """
         pass
 
-    def get_wiki(self, df, path_cat, path_link):
-        w = Wiki(df)
-        w.processing(path_cat, path_link)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt", "rb") as f:
-            cat = pickle.load(f)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt", "rb") as f:
-            link = pickle.load(f)
-        df['shared_categories'] = df.apply(lambda row: cat.get((row.DC, row.EC)), axis=1)
-        df['shared_links'] = df.apply(lambda row: link.get((row.DC, row.EC)), axis=1)
-        return df
+    # def get_wiki(self, df, path_cat, path_link):
+    #     w = Wiki(df)
+    #     w.processing(path_cat, path_link)
+    #     with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt", "rb") as f:
+    #         cat = pickle.load(f)
+    #     with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt", "rb") as f:
+    #         link = pickle.load(f)
+    #     df['shared_categories'] = df.apply(lambda row: cat.get((row.DC, row.EC)), axis=1)
+    #     df['shared_links'] = df.apply(lambda row: link.get((row.DC, row.EC)), axis=1)
+    #     return df
 
     def get_wordnet(self, df):
-        w = Wordnet(df)
-        return w.processing()
+        """
+        This method gets the four features from Germanet
+
+        Parameters
+        ----------
+        df: Dataframe
+            a dataframe with topic pairs and other training features
+
+        Returns
+        -------
+        Dataframe
+            the input dataframe plus the training features from Germanet
+        """
+        w = Wordnet_de(df, "/Users/kangchieh/Downloads/Bachelorarbeit/germanet/GN_V160/GN_V160_XML")
+        df_wordnet = w.processing()
+        return df_wordnet
 
     def get_sentiment(self, df, path):
+        """
+        This method gets the sentiment of the given topics
+
+        Parameters
+        ----------
+        df: Dataframe
+            a dataframe with topic pairs and other training features
+        path: String
+            the path of a dictionary with already saved topics and their sentiment
+
+        Returns
+        -------
+        Dataframe
+            the input dataframe plus the sentiment features
+        """
         s = Sentiment_Analysis(df)
         s.processing(path)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt", "rb") as f:
+        with open(path, "rb") as f:
             sentiment = pickle.load(f)
         df['DC_sentiment'] = df["DC"].apply(lambda x: sentiment.get(x))
         df['EC_sentiment'] = df["EC"].apply(lambda x: sentiment.get(x))
         return df
 
     def word_embedding(self, df):
-        w = Word2vec(df)
-        word2vec = w.embedding_spacy()
+        """
+        This method gets the word embedding of the given topics
+
+        Parameters
+        ----------
+        df: Dataframe
+            a dataframe with topic pairs and other training features
+
+        Returns
+        -------
+        Dataframe
+            the input dataframe plus the word embedding of every topic
+        """
+        w = Word2vec(df, '/Users/kangchieh/Downloads/Bachelorarbeit/cc.de.100.bin', 'de')
+        word2vec = w.embedding_fasttext()  # use fasttext embedding
         dc_embedding = []
         ec_embedding = []
         for i in range(len(df)):
@@ -111,21 +122,35 @@ class GetFeature:
         df['EC_embedding'] = ec_embedding
         return df
 
-    def processing(self, df, sentiment_path=None, cat_path=None, link_path=None):
-        # wordembed = self.word_embedding(self.df)
-        wiki = self.get_wiki(df, cat_path, link_path)
-        wordnet = self.get_wordnet(wiki)
+    def processing(self, df, sentiment_path=None):
+        """
+        This method performs the final processing of get the training features
+
+        Parameters
+        ----------
+        df: Dataframe
+            a dataframe with topic pairs and other training features
+        sentiment_path: String
+            the path of a dictionary with already saved topics and their sentiment
+
+        Returns
+        -------
+        Dataframe
+            the dataframe plus the word embedding of every topic
+        """
+        wordnet = self.get_wordnet(df)
         final_result = self.get_sentiment(wordnet, sentiment_path)
-        # final_result = self.load_distributional_similarity(self.df, sentiment)
 
         final_result['freq_ratio'] = final_result.apply(
-            lambda row: min(row.DC_freq / row.EC_freq, row.EC_freq / row.DC_freq) if row.DC_freq != 0 and row.EC_freq != 0 else 1/max(row.DC_freq, row.EC_freq), axis=1)
+            lambda row: min(row.DC_freq / row.EC_freq,
+                            row.EC_freq / row.DC_freq) if row.DC_freq != 0 and row.EC_freq != 0 else 1 / max(
+                row.DC_freq, row.EC_freq), axis=1)  # calculating frequency ratio of two words
 
         return final_result
 
 
 class Training:
-    def __init__(self, df, load_from_path, lang):
+    def __init__(self, df, lang):
         """
         Parameters
         ----------
@@ -143,59 +168,55 @@ class Training:
             9. good expansion
             10. DC_embedding
             11. EC_embedding
-            12. shared_categories
-            13. shared_links
-            14. hypernym
-            15. hyponym
-            16. co-hypernym
-            17. synonym
-            18. DC_Polarity_diff
-            19. EC_Polarity_diff
-            20. freq_ratio
-        log_reg: sklearn.linear_model
-            a sklearn model which performs binary or multiclass classification
-        new_df: Dataframe
-            new_df is predefined as None but will later be assigned to an adjusted version of df
-        X: Dataframe
-            X is predefined as None but will later be assigned to our training data
-        Y: Series
+            12. hypernym
+            13. hyponym
+            14. co-hypernym
+            15. synonym
+            16. DC_Polarity_diff
+            17. EC_Polarity_diff
+            18. freq_ratio
+        lang: String
+            The language of the model, e.g. 'de' for german and 'en' for english
+        input_X: Dataframe
+            A input X is predefined as None but will later be assigned to our training data
+        Input_Y: Series
             Y is predefined as None but will later be assigned to our output target
+        label_de:
+        label_en:
+        X_train:
+        X_test:
+        y_train:
+        y_test:
         """
         self.df = df
-        self.load_from_path = load_from_path
         self.lang = lang
-        self.new_df = None
-        self.X, self.y = None, None
-        self.label = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de.csv", index_col=0)
-        self.label_en = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv",
+        self.input_X, self.input_y = None, None
+        self.label_de = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de.csv",
                                  index_col=0)
+        self.label_en = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv",
+                                    index_col=0)
+        self.X_train, self.X_test, self.y_train, self.y_test = None, None, None, None
 
     def cleaning_data(self, df, drop=None):
         """ This function selects only the features needed in the training"""
         if drop is None:
             drop = []
-        X = df.drop(['DC', 'EC', 'stop_words', 'substring',  'DC_freq', 'EC_freq', 'filter out']+drop, axis=1)
+        X = df.drop(['DC', 'EC', 'stop_words', 'substring', 'DC_freq', 'EC_freq', 'filter out', 'DC_embedding',
+                     'EC_embedding'] + drop, axis=1)
         y = X.pop('good expansion')  # target output
-
-        #self.X = self.new_df  # training input
-
-        # Since our lists are saved as string we have to transform them back to list
-        if self.load_from_path:
-            X['DC_embedding'] = X['DC_embedding'].apply(literal_eval)
-            X['EC_embedding'] = X['EC_embedding'].apply(literal_eval)
 
         return X, y
 
-    def building_pipeline(self, df):
-        """ This function scales two columns 'shared_links' and 'shared_categories' with StandardScaler()"""
-        pipeline = Pipeline([
-            ('std_scaler', StandardScaler()),
-        ])
-        full_pipeline = ColumnTransformer([
-            ("num", pipeline, ['shared_links', 'shared_categories']),
-        ])
-        df[['shared_links', 'shared_categories']] = pd.DataFrame(full_pipeline.fit_transform(df))
-        return df
+    # def building_pipeline(self, df):
+    #     """ This function scales two columns 'shared_links' and 'shared_categories' with StandardScaler()"""
+    #     pipeline = Pipeline([
+    #         ('std_scaler', StandardScaler()),
+    #     ])
+    #     full_pipeline = ColumnTransformer([
+    #         ("num", pipeline, ['shared_links', 'shared_categories']),
+    #     ])
+    #     df[['shared_links', 'shared_categories']] = pd.DataFrame(full_pipeline.fit_transform(df))
+    #     return df
 
     def gettint_input(self, df):
         """ This function gets all training data from the same row to a list"""
@@ -207,7 +228,8 @@ class Training:
 
     def row_to_list(self, row):
         """
-        This function make a Dataframe row values to one list
+        This method make a Dataframe row values to one list
+
         Parameters
         ----------
         row: Series
@@ -245,7 +267,7 @@ class Training:
                 new_l.append(sub)
         return new_l
 
-    def split_data(self, x, y, size):
+    def split_data(self, X, y, split_ratio=0.1):
         """
         This functions splits our input and output data into train and test data
 
@@ -261,29 +283,27 @@ class Training:
             a list contains of our split data
 
         """
-        return train_test_split(x, y, test_size=size)
+        return train_test_split(X, y, test_size=split_ratio, stratify=y)
 
-    def logistic_regression(self, X, y, split_ratio=0.2):
+    def logistic_regression(self):
         """ This function performs logistic regression and prints the result at the end"""
-        input_X = np.array([np.array(x) for x in X["input"].values])
-        input_y = np.array(y.values)
-
-        X_train, X_test, y_train, y_test = self.split_data(input_X, input_y, split_ratio)
         log_reg = LogisticRegression(max_iter=5000)
-        log_reg.fit(X_train, y_train)
+        log_reg.fit(self.X_train, self.y_train)
 
-        test_predictions = log_reg.predict(X_test)
+        test_predictions = log_reg.predict(self.X_test)
+        eval_interval = self.evaluation(test_predictions, self.y_test)
 
         print('Logistic Regression:')
-        print("Predictions: ", test_predictions)
-        print("Labels:      ", y_test)
-        print("\nSqrt MSE:    ", self.mean_square_error(test_predictions, y_test))
-        print("f1 Score:    ", self.f1_score(y_test, test_predictions))
-        print("Precision:   ", precision_score(y_test, test_predictions, average="weighted"))
-        print("Recall:      ", recall_score(y_test, test_predictions, average="weighted"))
-        return y_test, test_predictions
+        print("Predictions:   ", test_predictions)
+        print("Labels:        ", self.y_test)
+        print("\nSqrt MSE:      ", self.mean_square_error(test_predictions, self.y_test))
+        print("f1 Score:      ", self.f1_score(self.y_test, test_predictions))
+        print("Precision:     ", precision_score(self.y_test, test_predictions, average="weighted"))
+        print("Recall:        ", recall_score(self.y_test, test_predictions, average="weighted"))
+        print("Errors Interval", eval_interval)
+        return self.y_test, test_predictions
 
-    def cross_validation(self, model, X, y):
+    def cross_validation(self, model):
         """
         This function performs cross validation and prints the result at the end
         Parameters
@@ -291,15 +311,13 @@ class Training:
         model: sklearn model
             a model to use to fit the data
         """
-        input_X = np.array([np.array(x) for x in X["input"].values])
-        input_y = np.array(y.values)
-        scores = cross_val_score(model, input_X, input_y,
-                                 scoring="neg_mean_squared_error", cv=5)
-        tree_rmse_scores = np.sqrt(-scores)
-        # print("\nCross Validation:")
-        # print("Scores:", tree_rmse_scores)
-        # print("Mean:  ", tree_rmse_scores.mean())
-        # print("Standard deviation:", tree_rmse_scores.std())
+        scores = cross_validate(model, self.X_train, self.y_train,
+                                scoring=("f1", "precision", "recall"), cv=5)
+        print("\nCross Validation:")
+        print("Scores:", scores)
+        # print("Mean:  ", scores.mean())
+        # print("Standard deviation:", scores.std())
+        return scores['test_f1'].mean()
 
     def mean_square_error(self, y_test, test_predictions):
         reg_mse = mean_squared_error(y_test, test_predictions)
@@ -308,76 +326,180 @@ class Training:
         return reg_rmse
 
     def f1_score(self, y_test, test_predictions):
-        return f1_score(y_test, test_predictions, average='weighted')
+        return f1_score(y_test, test_predictions, average='macro')
 
-    def f1_score_compare(self, lang='de', drop=None, times=100, path=None, df=None):
+    def decision_tree(self):
+        # Decision tree using cross validation
+        decision_tree_reg = DecisionTreeClassifier()
+        self.cross_validation(decision_tree_reg)
+
+    def random_forest_regressor(self):
+        random_forest_reg = RandomForestRegressor()
+        self.cross_validation(random_forest_reg)
+
+    def evaluation(self, predictions, y_test):
+        confidence = 0.95
+        squared_errors = (predictions - y_test) ** 2
+        interval = np.sqrt(stats.t.interval(confidence, len(squared_errors) - 1,
+                                            loc=squared_errors.mean(), scale=stats.sem(squared_errors)))
+        print(interval)
+
+    def grid_search(self, model):
+        if model == 'logistic':
+            grid_parameters = {
+                'C': [10, 100, 1000],
+                # 'max_iter': list(range(1000, 2200, 250))
+            }
+            log_reg = LogisticRegression(C=100, max_iter=5000)
+
+            grid_search = GridSearchCV(log_reg, grid_parameters, cv=5,
+                                       scoring='f1_macro',
+                                       return_train_score=True)
+
+        elif model == 'decision':
+            grid_parameters = [{
+                'criterion': ['gini', 'entropy'],
+                'max_depth': [2, 4, 6, 8, 10],
+                'max_features': ["auto", "sqrt", "log2"],
+                'splitter': ["best", "random"]
+            }]
+            decision_tree = DecisionTreeClassifier()
+
+            grid_search = GridSearchCV(decision_tree, grid_parameters, cv=5,
+                                       scoring='f1_macro',
+                                       return_train_score=True)
+        else:
+            raise ValueError("The model can't be found!")
+
+        # print("Best Parameters: \n{}\n".format(grid_search.best_estimator_))
+        grid_search.fit(self.X_train, self.y_train)
+        best_model = grid_search.best_estimator_
+        # if model == 'logistic':
+        #   for param in self.parameters_logistic:
+        #       self.parameters_logistic[param][best_model.get_params()[param]] += 1
+        # elif model == 'decision':
+        #   for param in self.parameters_decision:
+        #       self.parameters_decision[param][best_model.get_params()[param]] += 1
+        pred = best_model.predict(self.X_test)
+
+        score = self.f1_score(self.y_test, pred)
+
+        return score, self.y_test, pred
+
+    # def precision_recall(self):
+
+    def f1_score_compare(self, lang='de', drop=None,  path=None, df=None):
         f1_score_1 = []
         if path is not None:
             df = pd.read_csv(path, index_col=0)
         f1_score_2 = []
-        for i in range(times):
-            y_test_1, test_predictions_1 = self.process(self.df, drop, self.lang)
-            y_test_2, test_predictions_2 = self.process(df, drop, lang)
-            f1_score_1.append(self.f1_score(y_test_1, test_predictions_1))
-            f1_score_2.append(self.f1_score(y_test_2, test_predictions_2))
+        score_1 = self.process(self.df, drop, self.lang, 'decision')
+        score_2 = self.process(df, drop, lang, 'decision')
+        f1_score_1.append(score_1)
+        f1_score_2.append(score_2)
+        # for i in range(times):
+        #     score_1 = self.process(self.df, drop, self.lang, 'logistic')
+        #     score_2 = self.process(df, drop, lang, 'decision')
+        #     # y_test_1, test_predictions_1 = self.process(self.df, drop, self.lang)
+        #     # y_test_2, test_predictions_2 = self.process(df, drop, lang)
+        #     f1_score_1.append(score_1)
+        #     f1_score_2.append(score_2)
         print(f1_score_1)
         print(f1_score_2)
-        plt.plot(f1_score_1, label='Spacy')
-        plt.plot(f1_score_2, label='Fasttext')
-        plt.xlabel("Times")
-        plt.ylabel("f1 score")
-        plt.legend(loc="upper left", fontsize=10)
-        plt.show()
+        # plt.plot(f1_score_1, label='1')
+        # plt.plot(f1_score_2, label='2')
+        # plt.xlabel("Times")
+        # plt.ylabel("f1 score")
+        # plt.legend(loc="upper left", fontsize=10)
+        # plt.show()
 
-    def process(self, df, drop, lang):
+    def process(self, df, drop, lang, model):
         if lang == 'de':
-            df = df.merge(self.label, on=['DC', 'EC'])
+            df = df.merge(self.label_de, on=['DC', 'EC'])
         elif lang == 'en':
             df = df.merge(self.label_en, on=['DC', 'EC'])
 
         df.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/test.csv")
 
         X, y = self.cleaning_data(df, drop)
-        X = self.building_pipeline(X)
+        # X = self.building_pipeline(X)
         X = self.gettint_input(X)
-        y_test, test_predictions = self.logistic_regression(X, y)
-        self.cross_validation(LogisticRegression(), X, y)
+        self.input_X, self.input_y = np.array([np.array(x) for x in X["input"].values]), np.array(y.values)
+        self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(self.input_X, self.input_y)
+        # y_test, test_predictions = self.logistic_regression()
+        if model == 'logistic':
+            score = self.cross_validation(LogisticRegression())
+        elif model == 'decision':
+            score = self.cross_validation(DecisionTreeClassifier())
 
-        return y_test, test_predictions
+        return score
+
+    def process_grid_search(self, df, lang, model, drop=None):
+        # if lang == 'de':
+        #     df = df.merge(self.label, on=['DC', 'EC'])
+        # elif lang == 'en':
+        #     df = df.merge(self.label_en, on=['DC', 'EC'])
+
+        # df.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/test.csv")
+
+        X, y = self.cleaning_data(df, drop)
+        # X = self.building_pipeline(X)
+        X = self.gettint_input(X)
+        self.input_X, self.input_y = np.array([np.array(x) for x in X["input"].values]), np.array(y.values)
+        # times = [10, 50, 100, 250, 500, 1000]
+        times = [150]
+        for time in times:
+            f1_score, tests, preds = [], [], []
+            for i in range(time):
+                if i == 75 or i == 200:
+                    print(i)
+                self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(self.input_X, self.input_y)
+                # y_test, test_predictions = self.logistic_regression()
+                score, test, pred = self.grid_search(model)
+                f1_score.append(score)
+                tests += test.tolist()
+                preds += pred.tolist()
+            print(f1_score)
+            precision, recall, _ = precision_recall_curve(tests, preds)
+            # pre_recall = PrecisionRecallDisplay.from_predictions(tests, preds)
+            plt.plot(precision, recall, label=model)
+            plt.legend(loc="upper right")
+            plt.xlabel("Precision")
+            plt.ylabel("Recall")
+            plt.savefig('/content/drive/MyDrive/test/testing.png')
+            print(statistics.mean(f1_score))
+
+        return score
+
+    def final_training_process(self):
+        df = pd.read_csv('/content/drive/MyDrive/test/test_fasttext.csv')
+        training = Training(df, 'de')
+        _, pre_recall_1 = training.process_grid_search(training.df, 'de', 'logistic')
+        df = pd.read_csv('/content/drive/MyDrive/test/test_statified.csv')
+        training = Training(df, 'de')
+        _, pre_recall_2 = training.process_grid_search(training.df, 'de', 'logistic')
+
+    # X, y = self.cleaning_data(df, drop)
+        # X = self.building_pipeline(X)
+        # X = self.gettint_input(X)
+        # self.input_X, self.input_y = np.array([np.array(x) for x in X["input"].values]), np.array(y.values)
+        # times = [10, 50, 100, 250, 500, 1000]
+        #
+        # for time in times:
+        #     f1_score = []
+        #     for i in range(time):
+        #         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(self.input_X, self.input_y)
+        #         # y_test, test_predictions = self.logistic_regression()
+        #         score = self.grid_search(model)
+        #         f1_score.append(score)
+        #     print(statistics.mean(f1_score))
+        #
+        # return score
 
 
 if __name__ == "__main__":
-    # data = pardata.load_dataset('wikipedia_oriented_relatedness')
-    # print(data)
-
-
-    # path = "/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/"
-    # files = [f for f in listdir(path) if isfile(join(path, f))]
-    # not_exist = []
-    # for i in range(1, 20586):
-    #     try:
-    #         text = open("/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/test_%s.txt" % i, "r", encoding="utf-8").read()
-    #     except FileNotFoundError:
-    #         not_exist.append(i)
-    #         print(i)
-    # # a = [n for n in not_exist if n > 10000]
-    # # b = [n for n in a if n < 7000]
-    # # print(len(a))
-    # # print(len(b))
-    # print(len(not_exist))
-
-    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_sim=0.3_freq=0.01_libre_shorten.csv", index_col=0)
-
-    g = GetFeature(df)
-    # df1 = g.processing()
-    # #
-    # df1.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training_de/libre_shorten_v1.csv")
-    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training_de/libre_shorten_v1.csv", index_col=0)
-    # df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training_de/v3.csv",
-    #                  index_col=0)
-    #
-    t = Training(df)
-    t.process(t.df)
-    t.f1_score_compare(path="/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training_de/v4.csv")
+    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/test/test_%s.csv" % 'fasttext', index_col=0)
+    print(len(df))
+    print(len(df[df['good expansion']==1]))
 
     #

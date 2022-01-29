@@ -14,7 +14,7 @@ class Pattern:
     """
     This class is aimed to find the pattern of the potential extraction candidates and extract the EC from the matched
     sentences.
-    ...
+
     Attributes
     ----------
     spacy: Object
@@ -224,7 +224,3 @@ if __name__ == "__main__":
 
     p.extract_concept_wiki()
 
-    # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_con_v2.pkt", "rb") as f:
-    #     unserialized_data = pickle.load(f)
-    # print(unserialized_data)
-    # p.get_EC(unserialized_data)

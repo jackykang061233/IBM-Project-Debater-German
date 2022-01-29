@@ -36,8 +36,8 @@ class Stanza_Pattern:
         This method uses the token-level regular expression to match our desired patterns
     pattern_dc_construction(dc, pattern):
         This method uses the token-level regular expression to match our desired patterns
-    pattern_dc_construction(dc, pattern):
-        This method returns the string of the concatenation of dc and pattern
+    clean_ec:
+        This method removes nan and duplicate ECs after extracting topics
     process(text):
         This method performs the pattern matching process
     """
@@ -114,9 +114,6 @@ class Stanza_Pattern:
 
         return [token.text for token in doc]
 
-    def dependency_parser_text(self, text):
-        doc = self.nlp_spacy(text)
-
     def stanza_processor_sentence(self, sentence):
         """
         This method returns result of the several NLP tasks on each token of a sentence with help of stanza
@@ -135,12 +132,6 @@ class Stanza_Pattern:
         doc = self.nlp_stanza(sentence)
 
         return doc.sentences
-        # root = [(word.id, word.text) for sent in doc.sentences for word in sent.words if word.head == 0]
-        # child = [(word.id, word.text) for sent in doc.sentences for word in sent.words if word.head == root[0][0]]
-        # von_root = [(word.head) for sent in doc.sentences for word in sent.words if word.text == 'für']
-        #
-        # print(child)
-        # print(child_root)
 
     def pattern_extraction_text(self, sentences, dc, pattern):
         """
@@ -245,8 +236,18 @@ class Stanza_Pattern:
         return pattern_dc
 
     def clean_ec(self, extracted_sentences):
+        """
+        This method removes nan and duplicate ECs after extracting topics
+
+        Parameters
+        ----------
+         dc: String
+            debate concept
+
+        """
         dc_ec_list = extracted_sentences.iloc[:, :2].values
 
+        # remove duplicate and nan
         dc_ec_list = list(set([(concept[0], concept[1]) for concept in dc_ec_list if pd.notna(concept[1])]))
         cleaned_sentences = pd.DataFrame.from_records(dc_ec_list, columns=['DC', 'EC'])
         return cleaned_sentences
@@ -282,36 +283,6 @@ class Stanza_Pattern:
 
 
 if __name__ == '__main__':
-    spacy = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_%s.csv" % 'spacy', index_col=0)
-    fasttext = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_%s.csv" % 'fasttext', index_col=0)
-    print(spacy.distributional_similarity.values,sep=", ")
-    print(fasttext.distributional_similarity.values,sep=", ")
-    #text = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles_de/" + "Waffenkontrolle (Recht)" + ".txt").read()
-
-    #database = 'Verwaltungsaufgaben, inklusive Materialhandhabung, Computerarbeit und Kopieren.'
-    #S = Stanza_Pattern()
-    # print(S.tokenization('Der Freiwilligendienst'))
-    #S.process()
-    # a = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/filter_v1.csv", index_col=0)
-    # df1 = a[['DC', 'EC']]
-    # df1.loc[:, 'good expansion'] = 0
-    #
-    # df1.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv")
-
-    # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_de_libre_shorten.pkt", "rb") as f:
-    #     extracted_sentences = pickle.load(f)
-    # a = []
-    # count = 0
-    # for key, value in extracted_sentences.items():
-    #     for v in value:
-    #         print(key, v)
-    # print(count)
-
-
-
-
-
-
-    # S.pattern_extraction_text(database)
-    # print(S.pattern_extraction_sentence(database))
-
+    import pickle
+    import stanza
+    import pandas as pd

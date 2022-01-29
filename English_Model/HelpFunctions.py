@@ -248,18 +248,18 @@ if __name__ == "__main__":
     # w = Wordnet(df)
     # df = w.processing()
     # wiki = Wiki(df)
-    sync_dc = wn.synsets('democracy')
-    sync_ec = wn.synsets('gun')
-    print(sync_dc)
+    sync_dc = wn.synsets('car')
+    sync_ec = wn.synsets('motorcar')
+    print(sync_dc[0].lemma_names())
     print(sync_ec)
 
-    hypernym_dc = [syn.hypernyms() for syn in sync_dc]
-    hypernym_ec = [syn.hypernyms() for syn in sync_ec]
-    print(hypernym_dc)
-    print(hypernym_ec)
-
-    common_hypernym = [dc.lowest_common_hypernyms(ec) for dc in sync_dc for ec in sync_ec]
-    print(common_hypernym)
+    # hypernym_dc = [syn.hypernyms() for syn in sync_dc]
+    # hypernym_ec = [syn.hypernyms() for syn in sync_ec]
+    # print(hypernym_dc)
+    # print(hypernym_ec)
+    #
+    # common_hypernym = [dc.lowest_common_hypernyms(ec) for dc in sync_dc for ec in sync_ec]
+    # print(common_hypernym)
 
 
 

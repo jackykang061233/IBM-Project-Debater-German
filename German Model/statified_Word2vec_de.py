@@ -1,74 +1,158 @@
+# Pickle
 import pickle
-from os import listdir
-from os.path import isfile, join
-
-# Pytorch
-import torch
+# Numpy
+import numpy as np
 
 
 class statified_word2vec:
-    def __init__(self, path):
-        self.path = path
-        #self.folders = self.get_embedding_files()
-        #self.embedding_dicts = self.get_embedding_dicts()
-        self.lemma_de = self.get_lemma()
-        self.embedding = self.get_embedding()
+    """
+    A class used to get the feature of the german model, other training features like distributional similarity are
+    already included in the dataframe before performing this class
 
-    def get_embedding_files(self):
-        folders = [f for f in listdir(self.path) if isfile(join(self.path, f))]
-        folders.sort(key=lambda x: int(x.partition("embedding_c")[2].partition(".txt")[0]))
-        return folders
+    Attributes
+    ----------
+    embedding_path: String
+        A string of the directory path of pretrained word embedding
+    lemma_path: String
+        A string of the directory path of lemma
+    lemma_de: Dictionary
+        A dictionary of words and their lemma
+    embedding: Dictionary
+        A dictionary of words and their word embeddings
+    Methods
+    -------
+    fasttext_like_embedding(words):
+        This method calculates the sentence embedding like fasttext
+    l2_norm(vec):
+        This method calculates the l2 norm of a vector
+    max_embedding(words):
+        This method takes the maximal value (each dimension) of the word vectors in the sentence
+    min_embedding(words):
+        This method takes the minimum value (each dimension) of the word vectors in the sentence
+    average_embedding(words):
+        This method averages the word vectors in the sentence
+    """
+    def __init__(self, embedding_path, lemma_path):
+        """
+        Parameters
+        ----------
+        lemma_de:
+            a dictionary of words and their lemma
+        embedding:
+            a dictionary of words and their embeddings
+        """
+        self.lemma_de = pickle.load(open(lemma_path, "rb"))
+        self.embedding = pickle.load(open(embedding_path, "rb"))
 
-    def get_embedding_dicts(self):
-        embedding_files = []
-        for file in self.folders:
-            with open(join(self.path, file), 'rb') as f:
-                embedding_files.append(pickle.load(f))
-        return embedding_files
+    def fasttext_like_embedding(self, words):
+        """
+        This method calculates the sentence embedding like fasttext
 
-    def get_embedding(self):
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/embedding/final.txt", 'rb') as f:
-            embedding = pickle.load(f)
-        return embedding
+        Parameters
+        ----------
+        words: List
+            a list of words in a sentence
 
-    def get_lemma(self):
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt", 'rb') as f:
-            lemma = pickle.load(f)
-        return lemma
-
-    def max_embedding(self, word):
-        return self.embedding[word][0]
-
-    def min_embedding(self, word):
-        return self.embedding[word][1]
-
-    def average_embedding(self):
-        pass
-
-    def update_embedding(self):
-        new_embedding = {}
-        count = 1
-        for lemma in self.lemma_de.values():
-            try:
-                max = [embedd[lemma][1] for embedd in self.embedding_dicts]
-                max, _ = torch.max(torch.stack([max_embedd for max_embedd in max], dim=0), dim=0)
-
-                min = [embedd[lemma][2] for embedd in self.embedding]
-                min, _ = torch.min(torch.stack([min_embedd for min_embedd in min], dim=0), dim=0)
-
-                new_embedding[lemma] = [max, min]
-            except KeyError:
+        Returns
+        -------
+        Numpy array
+            a numpy array of a sentence embedding
+        """
+        initial_vec = np.zeros(768)
+        count = 0  # The number
+        for word in words:
+            word_embedd = self.embedding[word]
+            norm = self.l2_norm(word_embedd)
+            if norm > 0:  # if word embedding not equal to 0
+                initial_vec = np.add(initial_vec, word_embedd*(1/norm))
                 count += 1
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/embedding/final.txt", 'wb') as f:
-            pickle.dump(new_embedding, f)
-    def update_min_embedding(self):
-        pass
+        sentence_word_embedd = initial_vec/count
+        return sentence_word_embedd
 
-    def update_average_embedding(self):
-        pass
+    def l2_norm(self, vec):
+        """
+        This method calculates the l2 norm of a vector
+
+        Parameters
+        ----------
+        vec: Numpy array
+            a numpy array of word embedding
+
+        Returns
+        -------
+        Float
+            the l2 norm of a vector
+        """
+        norm = np.linalg.norm(vec)
+        return norm
+
+    def max_embedding(self, words):
+        """
+        This method takes the maximal value (each dimension) of the word vectors in the sentence
+
+        Parameters
+        ----------
+        words: List
+            a list of words in a sentence
+
+        Returns
+        -------
+        Numpy array
+            a numpy array of a sentence embedding
+        """
+        vec = np.ones(768)*(-np.inf)
+        for word in words:
+            word_embedd = self.embedding[word]
+            if np.any(word_embedd):
+                vec = np.maximum(vec, word_embedd)
+        return vec
+
+    def min_embedding(self, words):
+        """
+        This method takes the minimum value (each dimension) of the word vectors in the sentence
+
+        Parameters
+        ----------
+        words: List
+            a list of words in a sentence
+
+        Returns
+        -------
+        Numpy array
+            a numpy array of a sentence embedding
+        """
+        vec = np.ones(768) * (np.inf)
+        for word in words:
+            word_embedd = self.embedding[word]
+            if np.any(word_embedd):
+                vec = np.minimum(vec, word_embedd)
+        return vec
+
+    def average_embedding(self, words):
+        """
+        This method averages the word vectors in the sentence
+
+        Parameters
+        ----------
+        words: List
+            a list of words in a sentence
+
+        Returns
+        -------
+        Numpy array
+            a numpy array of a sentence embedding
+        """
+        word_embedd = [self.embedding[word] for word in words]
+        vec = np.mean(word_embedd, axis=0)
+        return vec
 
 
 if __name__ == "__main__":
-    s = statified_word2vec("/Users/kangchieh/Downloads/Bachelorarbeit/embedding")
-    s.update_embedding()
+    s = statified_word2vec("/Users/kangchieh/Downloads/Bachelorarbeit/statified word embedding/german_embedding.txt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt")
+    words = ['schlecht', 'Todesstrafe']
+    print(s.average_embedding(words))
+    # a = np.array([1, 2, 3])
+    # print(s.l2_norm(a))
+
+
 
