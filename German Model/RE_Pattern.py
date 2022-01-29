@@ -118,6 +118,7 @@ class Pattern:
     def postag(self, sentence):
         """
         This function finds the postag of a sentence
+
         Parameters
         ----------
         sentence: String
