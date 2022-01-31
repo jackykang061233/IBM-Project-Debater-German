@@ -182,6 +182,7 @@ class Training:
         Input_Y: Series
             Y is predefined as None but will later be assigned to our output target
         label_de:
+        
         label_en:
         X_train:
         X_test:
