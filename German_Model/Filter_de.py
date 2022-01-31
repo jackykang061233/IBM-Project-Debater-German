@@ -4,7 +4,7 @@ import spacy
 # Word2vec
 import string
 
-from HelpFunctions_de import Word2vec
+from German_Model.HelpFunctions_de import Word2vec
 # Stopwords
 from nltk.corpus import stopwords
 # Basic functions
@@ -48,7 +48,6 @@ class Filter:
             the german stopwords list
         """
         self.stop_words = set(stopwords.words('german'))  # english stopwords
-
 
     def preprocess(self, df):
         """
@@ -102,7 +101,7 @@ class Filter:
 
         return df
 
-    def frequency_ratio(self, df, dict_freq_path=None):
+    def frequency_ratio(self, df, corpus_path, dict_freq_path):
         """
         This function calculates the frequency of a word
 
@@ -110,57 +109,34 @@ class Filter:
         -------
         df: Dataframe
             a dataframe with topic pair
+        corpus_path:
+            the path of folder of our corpus
         dict_freq_path: Dictionary
-            the path of a dictionary of words and their frequencies in the corpus
+            the path of a dictionary of saved words and their frequencies in the corpus
         """
         Concept = list(set(list(df.DC.values) + list(df.EC.values)))
-        if dict_freq_path == None:  # no existing frequency dictionary
-            df['DC_freq'] = 0
-            df['EC_freq'] = 0
-            frequency_counter = {concept: 0 for concept in Concept}
+        with open(dict_freq_path, "rb") as f:
+            frequency_counter = pickle.load(f)
+        for concept in Concept:
+            counter = 0
+            if concept not in frequency_counter:
+                print(concept)
+                corpus_files = [join(corpus_path, f) for f in listdir(corpus_path) if isfile(join(corpus_path, f))]
+                for file in corpus_files:
+                    with open(file, 'r') as f:
+                        lines = f.readlines()
+                    lines = ' '.join(lines)
+                    pattern = r"\b" + concept + r"\b"
+                    counter += len(self.re_match(pattern, lines))
 
-            for concept in Concept:
-                counter = 0
-                for i in range(1, 20586):
-                    try:
-                        with open("/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/test_%s.txt" % i, 'r') as f:
-                            lines = f.readlines()
-                        lines = ' '.join(lines)
-                        pattern = r"\b" + concept + r"\b"
-                        counter += len(self.re_match(pattern, lines))
-
-                    except FileNotFoundError:
-                        continue
-
-                frequency_counter[concept] += counter
-
-        else:  # uses existing frequency dictionary
-            with open(dict_freq_path, "rb") as f:
-                frequency_counter = pickle.load(f)
-            for concept in Concept:
-                counter = 0
-                if concept not in frequency_counter:
-                    print(concept)
-                    for i in range(1, 20586):
-                        try:
-                            with open("/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/test_%s.txt" % i, 'r') as f:
-                                lines = f.readlines()
-                            lines = ' '.join(lines)
-                            pattern = r"\b" + concept + r"\b"
-                            counter += len(self.re_match(pattern, lines))
-
-                        except FileNotFoundError:
-                            continue
-
-                    frequency_counter[concept] = counter
+                frequency_counter[concept] = counter
 
         for i in range(len(df)):
             DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
             df.at[i, 'DC_freq'] = frequency_counter[DC]
             df.at[i, 'EC_freq'] = frequency_counter[EC]
 
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/frequency_v2.pkt",
-                  "wb") as f:
+        with open(dict_freq_path, "wb") as f:
             pickle.dump(frequency_counter, f)
 
         return df
@@ -182,7 +158,7 @@ class Filter:
         distributional_similarity = []
 
         # import the class Word2vec from Helfunctions to calculate the word embeddings
-        w = Word2vec(df, '/Users/kangchieh/Downloads/Bachelorarbeit/cc.de.100.bin')
+        w = Word2vec(df)
         if embedding == 'spacy':
             word2vec = w.embedding_spacy()
         elif embedding == 'fasttext':
@@ -196,7 +172,8 @@ class Filter:
             DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
             dc_embedding.append(list(word2vec[DC]))
             ec_embedding.append(list(word2vec[EC]))
-            distributional_similarity.append(w.cos_similarity(word2vec[DC],word2vec[EC]))  # calculate cosine similarity
+            distributional_similarity.append(
+                w.cos_similarity(word2vec[DC], word2vec[EC]))  # calculate cosine similarity
         df['DC_embedding'] = dc_embedding
         df['EC_embedding'] = ec_embedding
         df['distributional_similarity'] = distributional_similarity
@@ -220,7 +197,7 @@ class Filter:
 
         return df
 
-    def processing(self, embedding, df):
+    def processing(self, embedding, df, corpus_path, dict_freq_path):
         """
         This function processes all the filters at once
 
@@ -230,6 +207,10 @@ class Filter:
             there are three different embeddings that could be chosen: fasttext, spacy or statified
         df: Dataframe
             a dataframe with topic pairs
+        corpus_path: String
+            the path of folder of our corpus
+        dict_freq_path: Dictionary
+            the path of a dictionary of saved words and their frequencies in the corpus
         """
         preprocess = self.preprocess(df)
         stop_word = self.stop_word(preprocess)
@@ -237,14 +218,11 @@ class Filter:
         # named_entity = self.named_entity(substring)
         dsimilarity = self.distributional_similarity(substring, embedding)
 
-        frequency = self.frequency_ratio(dsimilarity)
-        # frequency = self.frequency_ratio(dsimilarity,
-        #                                  "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/frequency_v2.pkt")
+        frequency = self.frequency_ratio(dsimilarity, corpus_path, dict_freq_path)
 
         return frequency
 
-    def filter(self, df, freq=0.01, dsim=0.2,
-               freq_path="/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/frequency_v2.pkt"):
+    def filter(self, df, dict_freq_path, freq=0.01, dsim=0.2):
         """
         This function filters our given input and return only the ones that fit our criteria
 
@@ -252,13 +230,15 @@ class Filter:
         -------
         df: Dataframe
             a dataframe with topic pairs
+        dict_freq_path: Dictionary
+            the path of a dictionary of saved words and their frequencies in the corpus
         freq: float
             the minmal requirement for frequency ratio
         dsim: float
             the minmal requirement for distributional similarity
         """
 
-        with open(freq_path, "rb") as f:
+        with open(dict_freq_path, "rb") as f:
             frequency = pickle.load(f)
 
         for i in range(len(df)):
@@ -276,29 +256,8 @@ class Filter:
                 df.at[i, 'filter out'] = 1
         result = df[df["filter out"] == 0.0]
         result = result.reset_index(drop=True)
-        #result.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_sim=%s_freq=%s.csv" % (dsim, freq))
-        return result
 
-    # def filter_statistic(self, freq=0.01, dsim=0.3,
-    #                      freq_path="/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/frequency_v2.pkt"):
-    #     """
-    #     This function filters our given input and return only the ones that fit our criteria
-    #     """
-    #     df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_v4.csv", index_col=0)
-    #     with open(freq_path, "rb") as f:
-    #         frequency = pickle.load(f)
-    #     for key, value in frequency.items():
-    #         if value == 0:
-    #             frequency[key] = 1
-    #     l = len(df)
-    #     print(len(df))
-    #     print(len(df[~df['stop_words']]) / l)
-    #     # print(len(df[df['ner']]) / l)
-    #     print(len(df[~df['substring']]) / l)
-    #     print(len(df[df['distributional_similarity'] > dsim]) / l)
-    #     print(len(df[df.apply(
-    #         lambda row: min(frequency[row['DC']] / frequency[row['EC']],
-    #                         frequency[row['EC']] / frequency[row['DC']]) > freq, axis=1)]) / l)
+        return result
 
     def count_occurrences(self, word, sentence):
         """
@@ -330,4 +289,4 @@ class Filter:
 
 
 if __name__ == "__main__":
-    f = Filter()
+    pass

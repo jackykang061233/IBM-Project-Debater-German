@@ -7,6 +7,9 @@ import spacy
 # basic functions
 import pandas as pd
 import pickle
+from os import listdir
+from os.path import isfile, join
+
 
 
 class Pattern:
@@ -41,7 +44,7 @@ class Pattern:
             a list containing the matching consistent patterns (re)
         """
         self.spacy = spacy.load("de_core_news_sm")  # spacy postag
-        self.dc = pd.read_csv(dc_path, converters={'outlinks': eval}, index_col=0)  # outlink: string -> list
+        self.dc = pd.read_csv(dc_path,  index_col=0)
         self.consistent_pattern = [r' ist (ein|eine))\s+(.+?)\.',
                                    r' ist eine Art (des|der|von|vom))\s+(.+?)\.',
                                    r' ist eine Form (des|der|von|vom))\s+(.+?)\.',
@@ -56,30 +59,27 @@ class Pattern:
         # r'((\w+\-*\s*){1,10})\b(including ',
         # r'((\w+\-*\s*){1,10})\b(e\.g\. ']
 
-    def extract_concept(self, corpus_path, saved_extracted_path):
+    def extract_concept(self, corpus_path, extracted_sentence_path):
         """
         This function uses the matching patterns to find the potential EC (normally a sentence here)
 
         Parameters
         ----------
         corpus_path: String
-            the path to our corpus
+            the path of folder of our corpus
+        extracted_sentence_path: String
+            the path of the dictionary to save to extracted sentences
         """
         topic = {concept: [] for concept in self.dc.index.values}  # get our main topics and create an empty list
-        # synomyms = self.find_synonym()  # get synonyms of our main topics
+        corpus_files = [join(corpus_path, f) for f in listdir(corpus_path) if isfile(join(corpus_path, f))]  # list all corpus files
         for concept in self.dc.index.values:
             print(concept)
-            with open(corpus_path, "rb") as f:
-                extracted_sentences = pickle.load(f)
-            for lines in extracted_sentences:
-            # for i in range(1, 20586):
-            #     try:
-            #         with open("/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/test_%s.txt" % i, 'r') as f:
-            #             lines = f.readlines()
-            #         lines = ' '.join(lines)
-            #
-            #     except FileNotFoundError:
-            #         continue
+            # with open(corpus_path, "rb") as f:
+            #     extracted_sentences = pickle.load(f)
+            for file in corpus_files:
+                with open(file, "r") as f:  # read files one by one
+                        lines = f.readlines()
+                lines = ' '.join(lines)
 
                 for pattern in self.consistent_pattern:
                     concept_pattern = r'(' + concept + pattern  # create pattern from main topic
@@ -91,12 +91,10 @@ class Pattern:
                                     m[0] + ' ' + m[2] + '.')  # add the sentence matched with the pattern
                             except IndexError:
                                 topic[concept].append(m[0] + ' ' + m[1] + '.')
-                                with open("exception.txt", "a", encoding="utf-8") as exception:  # the path of exception could be adjusted
-                                    exception.write(concept + '\n')
 
             topic[concept] = list(set(topic[concept]))  # delete duplicates
 
-        with open(saved_extracted_path, "wb") as f:
+        with open(extracted_sentence_path, "wb") as f:
             pickle.dump(topic, f)
 
     def re_match(self, pattern, text):

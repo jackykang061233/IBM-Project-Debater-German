@@ -252,14 +252,14 @@ class Stanza_Pattern:
         cleaned_sentences = pd.DataFrame.from_records(dc_ec_list, columns=['DC', 'EC'])
         return cleaned_sentences
 
-    def process(self):
+    def process(self, extracted_sentence_path, extracted_topic_pairs_path):
         """
         This method performs the pattern matching process
 
         Parameters
         ----------
-        text: String
-           the string of a text
+        extracted_sentence_path: String
+           the path of the dictionary that saves the extracted sentences in the previous step
 
         Returns
         ------
@@ -270,7 +270,7 @@ class Stanza_Pattern:
         list_rows = []
         # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de.pkt", "rb") as f:
         #     extracted_sentences = pickle.load(f)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_de_libre_shorten.pkt", "rb") as f:
+        with open(extracted_sentence_path, "rb") as f:
             extracted_sentences = pickle.load(f)
         for dc, sentences in extracted_sentences.items():
             for pattern in self.pattern:
@@ -279,10 +279,8 @@ class Stanza_Pattern:
         extracted_sentences = pd.DataFrame(list_rows)
         print(extracted_sentences)
         extracted_sentences = self.clean_ec(extracted_sentences)
-        extracted_sentences.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de_libre_shorten_v1.csv")
+        extracted_sentences.to_csv(extracted_topic_pairs_path)
 
 
 if __name__ == '__main__':
-    import pickle
-    import stanza
-    import pandas as pd
+    pass

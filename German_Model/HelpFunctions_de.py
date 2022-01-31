@@ -1,7 +1,7 @@
 # Word2Vec
 import spacy
 import fasttext.util
-from statified_Word2vec_de import statified_word2vec
+from German_Model.statified_Word2vec_de import statified_word2vec
 import numpy as np
 # Cosine similarity
 from scipy import spatial
@@ -19,8 +19,6 @@ from germansentiment import SentimentModel
 
 # Common functions
 import pandas as pd
-
-
 
 
 class Word2vec:
@@ -43,14 +41,12 @@ class Word2vec:
         This method returns the cosine similarity of two vectors. Because that the definition of spatial.distance.cosine
         is 1 - cosine similarity we have to do 1 - spatial.distance.cosine = 1-(1-cosine similarity) = cosine similarity
     """
-    def __init__(self, df, model, lang='de'):
+    def __init__(self, df, lang='de'):
         """
         Parameters
         ----------
         df:
             a dataframe of pairs DC and EC
-        model:
-            a fasttext Word2Vec model
         lang:
             the language for word embedding model
         nlp:
@@ -61,7 +57,6 @@ class Word2vec:
             a dictionary of words and their lemma
         """
         self.df = df
-        self.model = model
         if lang == 'de':
             self.nlp = spacy.load('de_core_news_sm')
         with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/de_topic_tokenization.txt", 'rb') as f:
@@ -69,17 +64,21 @@ class Word2vec:
         with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt", 'rb') as f:
             self.lemma = pickle.load(f)
 
-    def embedding_fasttext(self):
+    def embedding_fasttext(self, model='/Users/kangchieh/Downloads/Bachelorarbeit/cc.de.100.bin'):
         """
         This method applies fasttext to get the word embeddings
 
+        Parameters
+        ----------
+        model: String
+            the path of fasttext model
         Returns
         ------
         dict:
             a dictionary contains of every topic and its word embedding
         """
         word2vec = {}
-        ft = fasttext.load_model(self.model)  # load model
+        ft = fasttext.load_model(model)  # load model
         for i in range(len(self.df)):
             DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
             if DC not in word2vec:  # initialize if DC not exists
@@ -106,7 +105,7 @@ class Word2vec:
                 word2vec[EC] = self.nlp(EC).vector
         return word2vec
 
-    def embedding_statified(self):
+    def embedding_statified(self, embedding="/Users/kangchieh/Downloads/Bachelorarbeit/statified word embedding/german_embedding.txt"):
         """
         This method applies loads the predefined statified contextualized word embeddings
 
@@ -115,7 +114,7 @@ class Word2vec:
         dict:
             a dictionary contains of every topic and its word embedding
         """
-        s = statified_word2vec("/Users/kangchieh/Downloads/Bachelorarbeit/statified word embedding/german_embedding.txt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt")
+        s = statified_word2vec(embedding, self.lemma)
         word2vec = {}
         for i in range(len(self.df)):
             DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
@@ -179,7 +178,7 @@ class Wordnet_de:
     processing:
        This method processes all the methods
     """
-    def __init__(self, df, germanet_path):
+    def __init__(self, df):
         """
         Parameters
         ----------
@@ -191,7 +190,7 @@ class Wordnet_de:
         self.df = df
         self.relation = pd.DataFrame(0, index=df.index, columns=['hypernym', 'hyponym', 'co-hypernym', 'synonym'])
         self.relation = pd.concat([self.df, self.relation], axis=1)
-        self.germanet = Germanet(germanet_path)
+        self.germanet = Germanet("/Users/kangchieh/Downloads/Bachelorarbeit/germanet/GN_V160/GN_V160_XML")
 
     def get_synset(self):
         """ This method returns the synset of DC and EC. Synset : a set of synonyms that share a common meaning """
@@ -349,14 +348,16 @@ class Wiki:
 
         return links.keys()
 
-    def processing(self, path_cat=None, path_link=None):
+    def processing(self, path_cat, path_link):
         """ This method processes all the methods to get the number of shared categories and shared links """
         wiki = wikipediaapi.Wikipedia('de')
-        shared_categories = {}
-        shared_links = {}
-        if path_cat is None:
-            for i in range(len(self.df)):
-                DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
+        with open(path_cat, "rb") as f:
+            shared_categories = pickle.load(f)
+        with open(path_link, "rb") as f1:
+            shared_links = pickle.load(f1)
+        for i in range(len(self.df)):
+            DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
+            if (DC, EC) not in shared_categories:
                 DC_wiki, EC_wiki = wiki.page(DC), wiki.page(EC)
                 # categories
                 DC_cat, EC_cat = self.categories(DC_wiki), self.categories(EC_wiki)
@@ -370,40 +371,10 @@ class Wiki:
                 shared_categories[(DC, EC)] = len(shared_cat)
                 shared_links[(DC, EC)] = len(shared_link)
 
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt",
-                          "wb") as f:
+        with open(path_cat,"wb") as f:
                 pickle.dump(shared_categories, f)
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt",
-                          "wb") as f1:
-                pickle.dump(shared_links, f1)
-
-        else:  # load the dictionary
-            with open(path_cat, "rb") as f:
-                shared_categories = pickle.load(f)
-            with open(path_link, "rb") as f1:
-                shared_links = pickle.load(f1)
-            for i in range(len(self.df)):
-                DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
-                if (DC, EC) not in shared_categories:
-                    DC_wiki, EC_wiki = wiki.page(DC), wiki.page(EC)
-                    # categories
-                    DC_cat, EC_cat = self.categories(DC_wiki), self.categories(EC_wiki)
-
-                    # out links
-                    DC_outlink, EC_outlink = self.links(DC_wiki), self.links(EC_wiki)
-
-                    shared_cat = set(DC_cat).intersection(EC_cat)
-                    shared_link = set(DC_outlink).intersection(EC_outlink)
-
-                    shared_categories[(DC, EC)] = len(shared_cat)
-                    shared_links[(DC, EC)] = len(shared_link)
-
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt",
-                        "wb") as f:
-                pickle.dump(shared_categories, f)
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt",
-                      "wb") as f1:
-                pickle.dump(shared_links, f1)
+        with open(path_link, "wb") as f1:
+            pickle.dump(shared_links, f1)
 
 
 class Sentiment_Analysis:
@@ -432,47 +403,32 @@ class Sentiment_Analysis:
             a look up table for translate sentiment result to numeric values
         """
         self.df = df
-        # self.sentiment = pd.DataFrame(0, index=df.index, columns=['DC_sentiment', 'EC_sentiment'])
-        # self.sentiment = pd.concat([self.df, self.sentiment], axis=1)
         self.model = SentimentModel()
         self.look_up = {'positive': 1, 'neutral': 0, 'negative': -1}
 
     def processing(self, path=None):
-        """ This method gets the sentiment of all the topics"""
-        if path == None:
-            topics = list(set(list(self.df.DC.values) + list(self.df.EC.values)))
-            topics_sentiment = self.model.predict_sentiment(topics)
+        """
+        This method gets the sentiment of all the topics
 
-            topics_sentiment = [self.look_up[sentiment] for sentiment in topics_sentiment]
+        Parameters
+        ----------
+        path: String
+            the path of the save words and their sentiments
+        """
+        with open(path, "rb") as f:
+            sentiment = pickle.load(f)
 
-            sentiment = dict(zip(topics, topics_sentiment))
-
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt",
-                      "wb") as f:
-                pickle.dump(sentiment, f)
-        else:  # load the dictionary
-            with open(path, "rb") as f:
-                sentiment = pickle.load(f)
-
-            topics = list(set(list(self.df.DC.values) + list(self.df.EC.values)))
-            for topic in topics:
-                if topic not in sentiment:
-                    sentiment[topic] = self.look_up[self.model.predict_sentiment(topic)[0]]
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt",
-                      "wb") as f:
-                pickle.dump(sentiment, f)
+        topics = list(set(list(self.df.DC.values) + list(self.df.EC.values)))
+        for topic in topics:
+            if topic not in sentiment:
+                sentiment[topic] = self.look_up[self.model.predict_sentiment(topic)[0]]
+        with open(path, "wb") as f:
+            pickle.dump(sentiment, f)
 
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/filter_sim=0.3_freq=0.01.csv", index_col=0)
-    df = df.reset_index(drop=True)
-
-    #w = Word2vec(df, '/Users/kangchieh/Downloads/Bachelorarbeit/cc.de.100.bin', 'de')
-    w = Wiki(df)
-    w.processing()
-    # a = w.processing()
-    # a.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter_de/hello.csv")
+    pass
 
 
 

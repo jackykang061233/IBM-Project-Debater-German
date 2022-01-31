@@ -2,7 +2,7 @@
 import statistics
 
 from matplotlib import pyplot as plt
-from HelpFunctions_de import Wiki, Wordnet_de, Word2vec, Sentiment_Analysis
+from German_Model.HelpFunctions_de import Wiki, Wordnet_de, Word2vec, Sentiment_Analysis
 
 # sklearn
 from sklearn.linear_model import LogisticRegression
@@ -45,9 +45,9 @@ class GetFeature:
     # def get_wiki(self, df, path_cat, path_link):
     #     w = Wiki(df)
     #     w.processing(path_cat, path_link)
-    #     with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt", "rb") as f:
+    #     with open(path_cat, "rb") as f:
     #         cat = pickle.load(f)
-    #     with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt", "rb") as f:
+    #     with open(path_link, "rb") as f:
     #         link = pickle.load(f)
     #     df['shared_categories'] = df.apply(lambda row: cat.get((row.DC, row.EC)), axis=1)
     #     df['shared_links'] = df.apply(lambda row: link.get((row.DC, row.EC)), axis=1)
@@ -67,7 +67,7 @@ class GetFeature:
         Dataframe
             the input dataframe plus the training features from Germanet
         """
-        w = Wordnet_de(df, "/Users/kangchieh/Downloads/Bachelorarbeit/germanet/GN_V160/GN_V160_XML")
+        w = Wordnet_de(df)
         df_wordnet = w.processing()
         return df_wordnet
 
@@ -109,7 +109,7 @@ class GetFeature:
         Dataframe
             the input dataframe plus the word embedding of every topic
         """
-        w = Word2vec(df, '/Users/kangchieh/Downloads/Bachelorarbeit/cc.de.100.bin', 'de')
+        w = Word2vec(df, 'de')
         word2vec = w.embedding_fasttext()  # use fasttext embedding
         dc_embedding = []
         ec_embedding = []
@@ -150,7 +150,7 @@ class GetFeature:
 
 
 class Training:
-    def __init__(self, df, lang):
+    def __init__(self, df, lang, label_de_path, label_en_path):
         """
         Parameters
         ----------
@@ -181,21 +181,24 @@ class Training:
             A input X is predefined as None but will later be assigned to our training data
         Input_Y: Series
             Y is predefined as None but will later be assigned to our output target
-        label_de:
-        
-        label_en:
+        label_de_path:
+            the german topic pairs and the label of if EC is a good expansion of DC (1=good, 0=bad)
+        label_en_path:
+            the english topic pairs and the label of if EC is a good expansion of DC (1=good, 0=bad)
         X_train:
+            training input
         X_test:
+            test input
         y_train:
+            training output
         y_test:
+            test output
         """
         self.df = df
         self.lang = lang
         self.input_X, self.input_y = None, None
-        self.label_de = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de.csv",
-                                 index_col=0)
-        self.label_en = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv",
-                                    index_col=0)
+        self.label_de = pd.read_csv(label_de_path, index_col=0)
+        self.label_en = pd.read_csv(label_en_path, index_col=0)
         self.X_train, self.X_test, self.y_train, self.y_test = None, None, None, None
 
     def cleaning_data(self, df, drop=None):
@@ -420,7 +423,6 @@ class Training:
         elif lang == 'en':
             df = df.merge(self.label_en, on=['DC', 'EC'])
 
-        df.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/test.csv")
 
         X, y = self.cleaning_data(df, drop)
         # X = self.building_pipeline(X)
@@ -441,7 +443,6 @@ class Training:
         # elif lang == 'en':
         #     df = df.merge(self.label_en, on=['DC', 'EC'])
 
-        # df.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/test.csv")
 
         X, y = self.cleaning_data(df, drop)
         # X = self.building_pipeline(X)
@@ -499,8 +500,4 @@ class Training:
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/test/test_%s.csv" % 'fasttext', index_col=0)
-    print(len(df))
-    print(len(df[df['good expansion']==1]))
-
-    #
+    pass
