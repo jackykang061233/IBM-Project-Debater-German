@@ -197,7 +197,7 @@ class Filter:
 
         return df
 
-    def processing(self, embedding, df, corpus_path, dict_freq_path):
+    def processing(self, embedding, df_path, corpus_path, dict_freq_path):
         """
         This function processes all the filters at once
 
@@ -205,13 +205,14 @@ class Filter:
         -------
         embedding: String
             there are three different embeddings that could be chosen: fasttext, spacy or statified
-        df: Dataframe
+        df_path: String
             a dataframe with topic pairs
         corpus_path: String
             the path of folder of our corpus
         dict_freq_path: Dictionary
             the path of a dictionary of saved words and their frequencies in the corpus
         """
+        df = pd.read_csv(df_path, index_col=0)
         preprocess = self.preprocess(df)
         stop_word = self.stop_word(preprocess)
         substring = self.substring(stop_word)
