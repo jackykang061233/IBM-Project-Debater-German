@@ -6,7 +6,7 @@ RUN main.py to process the german model
 ## 1. Extracted the sentences containing our topic plus patterns
 There are 3 parameters:
 ---------------------------------------
-1. dc_path: The path of dataframe of the debate concepts (DC)
+1. dc_path: The path of dataframe of the debate concepts (DC). See topic.csv in folder example_files
 2. corpus_path: The path of folder of our german corpus. There are about 25000 txt files in the folder. The corpus can be found at 
 3. extracted_sentence_path: Where to save the dictionary of all the extracted sentences
 ## 2. Extracted expansion concepts (EC) from previous extraceted sentences
@@ -29,6 +29,6 @@ There are 1 parameter:
 There are 4 parameter:
 ---------------------------------------
 1. lang: The language of the training
-2. label_de: expansion_label_de.csv
-3. label_en: expansion_label_en.csv
+2. label_de: See expansion_label_de.csv in folder example_files
+3. label_en: See expansion_label_en.csv in folder example_files
 4. model: Which classification model is being used, logistic regression or decision trees.
