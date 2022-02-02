@@ -19,12 +19,12 @@ There are 4 parameters:
 ---------------------------------------
 1. embedding: Which word embedding is being used, fasttext, spacy, or statified. 
 2. extracted_topic_pairs_path: A dataframe of topic pairs (DC and EC)that are extracted in the previous step.
-3. frequency_dict: A dictionary of words and their occurrences in the corpus. It's conventient and timesaving to save them as dictionary for later use.
+3. frequency_dict: A dictionary of words and their occurrences in the corpus. It's conventient and timesaving to save them as dictionary for later use. See final_frequency.pkt in folder example files
 4. corpus_path: The path of folder of our german corpus. There are about 25000 txt files in the folder. The link of the corpus can be found at https://www.dropbox.com/sh/tq44pwn7thnie30/AADuO2rfcAHg0No0ZwqpWoB9a?dl=0
 ### 4. Get Feature
 There are 1 parameter:
 ---------------------------------------
-1. sentiment_path: A dictionary of words and their sentiment. It's conventient and timesaving to save them as dictionary for later use.
+1. sentiment_path: A dictionary of words and their sentiment. It's conventient and timesaving to save them as dictionary for later use. See sentiment_de.pkt in folder example files
 ### 5. Training
 There are 4 parameters:
 ---------------------------------------
