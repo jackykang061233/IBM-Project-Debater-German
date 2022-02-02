@@ -1,0 +1,751 @@
+,DC,EC,good expansion
+0,Abtreibung,ernstes Gesundheitsproblem,0
+1,Religion,Anwendung des Konzepts,0
+2,Impfung,Impfungsstrategie,1
+3,Technologie,Arten,0
+4,Globalisierung,politische soziale und wirtschaftliche Veränderungen,1
+5,Internet,Technologie,1
+6,Prostitution,Verwaltungsvergehen,0
+7,Abtreibung,kontroverses Thema,0
+8,Internet,Ort,0
+9,Internet,Kanäle,0
+10,Religion,wichtiger Bestandteil der Identität,0
+11,Todesstrafe,sehr heikles Thema,0
+12,Kapitalismus,konzeptionelle Form des Kapitalismus,1
+13,Internet,mächtiger Kanal,0
+14,Kunst,Themen,0
+15,Steuer,Art,0
+16,Prostitution,administrative Straftat,0
+17,Religion,ungeteilte und nicht zu trennende Religion,0
+18,Impfstoff,von Sanaria entwickelter Kandidat,0
+19,Monopol,Marktstruktur,0
+20,Gesundheitswesen,wichtiges Thema,0
+21,Religion,Wissensfelder,0
+22,Impfung,öffentliches Gut,0
+23,Kapitalismus,umfassendere Form dieser Marktwirtschaft,0
+24,Impfung,aktive Form der Immunisierung,0
+25,Kunst,variabler Begriff,0
+26,Kunst,wichtiger Bestandteil des menschlichen Lebens,0
+27,DNA,Methode der nichtinvasiven Vornataldiagnose,0
+28,Gesundheitsversorgung,spezielle Pflegepraxis,0
+29,Technologie,zuverlässige und kostengünstige Technik,0
+30,Globalisierung,geschlechtsspezifischer Prozess,0
+31,Demokratie,Form der sozialen Organisation,0
+32,Steuer,finanzielle Abgabe,0
+33,Impfstoff,Person,0
+34,Gesundheitsversorgung,breit angelegtes Konzept,0
+35,Demokratie,Begriff der direkten Demokratie,0
+36,DNA,wesentliche Strukturkomponente vieler verschiedener mikrobieller Biofilme,0
+37,Steuer,aggressive Steuer,0
+38,Todesstrafe,hartes Menschenrechtsprinzip,0
+39,künstliche Intelligenz,moderne digitale Werkzeuge,0
+40,Sport,Trainer,0
+41,Impfstoff,Kombinations Impfstoff,0
+42,Kapitalismus,begehrter Bereich,0
+43,DNA,Informationsspeicher Makromolekül,0
+44,Monopol,Art,0
+45,Religion,starker Einfluss,0
+46,Waffenkontrolle,Begriff,0
+47,Technologie,Arbeitsplatzfragen,0
+48,Religion,Zwecke,0
+49,Demokratie,Form der delegativen Demokratie,0
+50,Impfstoff,Klasse,0
+51,Prostitution,Sexarbeit,1
+52,Fettleibigkeit,medizinischer Zustand,0
+53,Kapitalismus,Kapitalmarkt,1
+54,Steuer,Strafsteuer,0
+55,Religion,Kraft,0
+56,Religion,kontroverses und kompliziertes Subjekt,0
+57,Rauchen,führende Todesursache,0
+58,Waffenkontrolle,weitaus größeres Problem,0
+59,Gesundheitsversorgung,heterogene Institution,0
+60,Technologie,Tanzmusikstile,0
+61,Technologie,großes Problem,0
+62,Sport,Nischen,0
+63,Internet,regionale,0
+64,Religion,direktes Ergebnis des Versuches,0
+65,Rauchen,rauchlose Methoden,0
+66,Sport,organisierte oder unorganisierte Erholung,0
+67,Kunst,künstlerische Arbeit,0
+68,Steuer,Schätzung des gesamten steuerpflichtigen Einkommens,0
+69,Kapitalismus,starke Rolle,0
+70,Abtreibung,Themen,0
+71,Globalisierung,Bewegung,0
+72,Monopol,Organisation,0
+73,Medikament,synthetisches Prostaglandin,0
+74,Sport,Spiel der Fähigkeit,0
+75,Prostitution,illegale Geschäfte,0
+76,Steuer,spezielle Steuerart,0
+77,Drogen,Versorgungen,0
+78,Fettleibigkeit,dietbedingte Krankheiten,1
+79,Gesundheitsversorgung,abgeleitete Nachfrage,0
+80,Abtreibung,medizinische Abtreibung,0
+81,Internet,Netzwerk,1
+82,Atombombe,zeitgenössisches Geschichtsbuch des amerikanischen Journalisten,0
+83,Kunst,besonders gutes Beispiel,0
+84,Religion,breite Palette,0
+85,Rauchen,sozialer Standard,0
+86,Gesundheitsversorgung,soziale Dienstleistungen,0
+87,Impfstoff,COVID19 Impfstoff,1
+88,Internet,potenzieller Angriffsvektor,0
+89,Technologie,Standard,0
+90,Prostitution,Tätigkeiten,0
+91,Monopol,Struktur,0
+92,Impfstoff,Art,0
+93,Demokratie,Art Demokratie,0
+94,Demokratie,Verfahrensdemokratie,0
+95,Religion,einheitliches Glaubens,0
+96,Rauchen,Drogenkonsum,0
+97,Sport,Verwendungen,0
+98,Kryptowährung,Knoten,0
+99,Rauchen,weiterer Faktor,0
+100,Prostitution,Problem,0
+101,Todesstrafe,gesetzliche Sanktion,0
+102,Technologie,Einfluss,0
+103,Sport,Veranstaltungen,0
+104,Prostitution,ausbeuterische Praxis,0
+105,DNA,Polynukleotide,1
+106,Demokratie,System,0
+107,Monopol,isolierte magnetische Ladung,0
+108,Demokratie,alte griechische Stadtstaaten,1
+109,soziale Medien,Möglichkeiten,0
+110,Demokratie,Phase der Demokratie,0
+111,Religion,modernes westliches Konzept,0
+112,Sport,wichtiger Teil der isländischen Kultur,0
+113,Sport,wichtiger Teil der pakistanischen Kultur,0
+114,Steuer,Arbeitsbelange,0
+115,Internet,Kommunikationsmethoden,1
+116,Kapitalismus,Wirkung der Regierung,0
+117,Internet,Pakete,0
+118,Atombombe,Essays,0
+119,DNA,relativ seltene linke Doppelhelix,0
+120,Gesundheitsversorgung,typische Methode,0
+121,Todesstrafe,rechtliche Sanktion,0
+122,Religion,Synretismus der indigenen und katholischen Überzeugungen,0
+123,Kunst,allgemeine Begriffsbestimmung,0
+124,Religion,System,0
+125,Mindestlohn,fortschrittliche Ideen,0
+126,Steuer,Vorteile,0
+127,Gesundheitsversorgung,wichtiger Indikator,0
+128,Klimawandel,existentielles Risiko,0
+129,Internet,weitere Kritikquelle des Talmud,0
+130,Steuer,regressive Steuer,0
+131,Technologie,homogene Belegschaft,0
+132,Gesundheitsversorgung,ernstes Problem,0
+133,Technologie,kreativer Prozess,0
+134,Kryptowährung,digitale Währung,1
+135,Impfstoff,Mischung lebender geschwächter Viren,0
+136,Monopol,Unternehmen,0
+137,Internet,Kommunikationstechnologien,1
+138,DNA,wichtiges Ziel der zeitgenössischen Genomforschung,0
+139,Kunst,Reihe,0
+140,Technologie,Prozess dieser Arbeit,0
+141,Technologie,immer wachsende und fortschrittliche Industrie,0
+142,Internet,Gästebuch,0
+143,Steuer,Währungstransaktionssteuer,0
+144,Internet,Mittel,0
+145,Internet,Telekommunikationsdienste,0
+146,Rauchen,Prozesse,0
+147,Technologie,dynamische Einheit,0
+148,Technologie,Technologie,1
+149,Gesundheitsversorgung,entscheidender Teil des Übergangs,0
+150,Gesundheitswesen,wichtiger Bestandteil der Gesundheitssysteme,0
+151,Klimawandel,positive Rückkopplungsschleife,0
+152,Religion,gemeinschaftliche keine individuelle Wahl,0
+153,Gesundheitsversorgung,technische Herausforderung,0
+154,Sport,neuseeländischer Sport Streaming Service,0
+155,Klimawandel,Formen der Umweltzerstörung,1
+156,Kunst,Körper,0
+157,Flüchtlinge,Einwanderer,1
+158,Technologie,sehr einfache Form der frei Raumoptischen Kommunikation,0
+159,Demokratie,Vereinbarung,0
+160,Rauchen,großer Teil,0
+161,Patriotismus,Form des Patriotismus,0
+162,Sport,gefährliche,0
+163,Kapitalismus,inhaltlicher Bereich,0
+164,Sport,Bus,0
+165,Prostitution,Karriereoption,0
+166,Drogen,Mittel,0
+167,Abtreibung,weitere wichtige Ursache,0
+168,Rauchen,Hauptursache,0
+169,Smartphone,Smartphone,1
+170,Sport,Echtzeit Informationen,0
+171,Steuer,Instrument,0
+172,Religion,schlechter moralischer Führer,0
+173,Todesstrafe,Voraussetzung,0
+174,Internet,unvergleichliche Erfolgsgeschichte,0
+175,Technologie,Analyse der negativen Auswirkungen,0
+176,Atomwaffen,Massenvernichtungswaffen,1
+177,Internet,Informations,0
+178,Technologie,System,0
+179,Prostitution,harte Notwendigkeit,0
+180,Abtreibung,großes Phänomen,0
+181,Sport,Vergnügungen,0
+182,Klimawandel,natürliches Ereignis,0
+183,Demokratie,interdisziplinärer Zweig der öffentlichen Wahl,0
+184,Kunst,Einrichtung,0
+185,Monopol,System,0
+186,DNA,Funktionen,0
+187,Demokratie,Art,0
+188,Technologie,Tiefschneidwerkzeug,0
+189,Rauchen,primäres Ziel,0
+190,Internet,Schlüsselressource,0
+191,Abtreibung,unvollständige Abtreibung,0
+192,Euthanasie,vernünftige Wahl,0
+193,Steuer,Form der Verschmutzungssteuer,0
+194,Drogen,Lieferungen,0
+195,Technologie,Produkten,0
+196,Patriotismus,Mangel,0
+197,Kunst,physikalisches zwei oder dreidimensionales Objekt,0
+198,Impfstoff,diese Art,0
+199,Religion,langer Versuch,0
+200,Gesundheitsversorgung,politische Initiativen,0
+201,Kunst,unterschätzter Beitrag,0
+202,Demokratie,von dem israelischen Historiker Jacob Leib Talmon populärer Begriff,0
+203,Technologie,Periode stabiler und vergüteter Einkünfte,0
+204,Kunst,Polemik des Materialismus,0
+205,Klimawandel,globale Herausforderung,0
+206,Technologie,integraler Bestandteil mehrerer Pläne,0
+207,Flüchtlinge,Migranten,1
+208,Klimawandel,internationales Umweltabkommen,0
+209,DNA,Impfstoffe,0
+210,Monopol,Preisträger,0
+211,Kapitalismus,Begriff,0
+212,Abtreibung,Hauptursache,0
+213,Todesstrafe,rechtliche Form der Strafe,0
+214,Steuer,wesentlicher Bestandteil der makroökonomischen Politik,0
+215,Kunst,sehr subtile manchmal auch symbolische Ausdrucksform,0
+216,Abtreibung,selten angewandte Methode,0
+217,Kunst,wichtiger Bestandteil,0
+218,Kunst,Aktivitäten,0
+219,Prostitution,Unternehmen,0
+220,Abtreibung,führende Ursache,0
+221,Steuer,Steuersystem,0
+222,soziale Medien,Anwendungen,0
+223,Klimawandel,Umweltprobleme,1
+224,Religion,Demografie,0
+225,Todesstrafe,Methode,0
+226,Prostitution,sexuelle Missbrauch,1
+227,Religion,Mittel,0
+228,Technologie,Gründe,0
+229,Steuer,Regierungsabgabe,0
+230,Steuer,obligatorische Finanzgebühr,0
+231,DNA,Molekül,1
+232,Abtreibung,Thema der Kontroversen,0
+233,Demokratie,Theorie der Bürgerinnen,0
+234,Smartphone,bestimmte Art,0
+235,Technologie,Medien,0
+236,Klimawandel,Herausforderung,0
+237,soziale Medien,neue Werbekanäle,0
+238,Rauchen,etablierter Risikofaktor,0
+239,Internet,Netzwerken,1
+240,Religion,archaischer Ableger der indoeuropäischen Religion,0
+241,DNA,Beweise,0
+242,Klimawandel,komplexes globales Problem,0
+243,Gesundheitsversorgung,Form der Gesundheitsfinanzierung,1
+244,Sport,Gelände der streitigen Geschlechtsbeziehungen,0
+245,Klimawandel,Thema,0
+246,Demokratie,Mix,0
+247,Gesundheitsversorgung,knappe Ressource,0
+248,Demokratie,Begriff,0
+249,Internet,globales Netzwerk,1
+250,DNA,langes Polymer,0
+251,Impfstoff,antigene Zubereitung,0
+252,Elektroauto,Auto,1
+253,Abtreibung,moralisches Recht,1
+254,Demokratie,Selbstverteidigung,0
+255,Kunst,direkte Folge der semantischen Mehrdeutigkeit,0
+256,Prostitution,beliebtes Thema,0
+257,Religion,Ausdruck unseres kollektiven Bewusstseins,0
+258,Impfstoff,replikationsdefizitärer Simian Adenovirus Vektor,0
+259,Abtreibung,weitere Hauptursache,0
+260,Technologie,neuer Wandel,0
+261,Klimawandel,tribale Religion,0
+262,DNA,zentraler Teil der Molekularbiologie,0
+263,Abtreibung,ernste Angelegenheit,0
+264,Prostitution,wichtiges Thema,0
+265,Religion,Variante der chinesischen Volksreligation,1
+266,Technologie,sehr schonender Prozess,0
+267,Sport,Freizeitaktivitäten,1
+268,Technologie,Art,0
+269,Klimawandel,Bedrohungen,0
+270,DNA,Kette,0
+271,Kunst,grundlegende künstlerische Haltung,0
+272,Globalisierung,soziale Bewegung,0
+273,Internet,wachsende moderne Form der Terrorismusfinanzierung,0
+274,Medikament,andere chemische Substanz,0
+275,Technologie,wichtige Quelle des sozialen Wandels,0
+276,Rauchen,Tabakkonsum,1
+277,Internet,Formen der Zensur,0
+278,Globalisierung,vielfältiges Phänomen,0
+279,Flüchtlinge,Betroffene,0
+280,Technologie,direkter Faktor,0
+281,DNA,langes Biopolymer,0
+282,Impfstoff,experimenteller Impfstoff,0
+283,Rauchen,integraler Bestandteil der vietnamesischen Kultur,0
+284,Prostitution,freie Wahl,0
+285,künstliche Intelligenz,Technologien,1
+286,Drogen,Misserfolg,0
+287,Prostitution,Gesetzesänderungsgesetz,0
+288,DNA,Nukleinsäure,1
+289,Kapitalismus,politische Philosophie,1
+290,Internet,globale öffentliche Ressource,0
+291,Steuer,Mischung,0
+292,Sport,wichtige Form,0
+293,Demokratie,repräsentative Demokratie,1
+294,Religion,Bewegung,0
+295,Religion,kulturelles System,0
+296,Internet,elektronische Signale,0
+297,Kunst,kulturelle Elemente,0
+298,Prostitution,Straftat des dritten Grades,0
+299,Prostitution,andere Gesetzesänderungen,0
+300,DNA,autosomale DNAs,0
+301,Kryptowährung,Form der digitalen oder virtuellen Währung,0
+302,Kapitalismus,Feinde,0
+303,Internet,globaler öffentlicher Raum,0
+304,Impfstoff,biologische Zubereitung,0
+305,Gleichstellung der Geschlechter,Ermutigung,0
+306,Kunst,kollektiver Begriff,0
+307,Abtreibung,chirurgisches Verfahren,0
+308,Impfstoff,Initiativen,0
+309,Internet,integraler Bestandteil des Lebens,0
+310,Demokratie,politische Ideologie,1
+311,Impfung,günstige und effektive Möglichkeit,0
+312,Internet,relativ neues Phänomen,0
+313,Drogen,Substanzen,0
+314,Gesundheitsversorgung,Rechte,0
+315,Impfstoff,inaktivierter Poliovirus Impfstoff,0
+316,Kunst,Fahrzeug,0
+317,Monopol,Monopol,1
+318,Kunst,Objekte,0
+319,Klimawandel,positives Klima Feedback,0
+320,Prostitution,große soziale Frage,0
+321,Prostitution,Prostitution,1
+322,DNA,gemeinsame Methode der Gensilencing,0
+323,Demokratie,Gelegenheit,0
+324,Sport,wettbewerbsfähiger Kontaktsport,0
+325,Sport,umstrittenes Thema,0
+326,Kunst,Formen des kulturellen Ausdrucks,0
+327,Technologie,Elemente der Kultur,0
+328,Smartphone,Geräte,0
+329,Patriotismus,Entwicklung des früheren Begriffs,0
+330,Religion,wichtiger Moment,0
+331,Internet,globales System vernetzter Computernetze,1
+332,Religion,komplexes und problematisches modernes westliches Konzept,0
+333,Demokratie,Instrument,0
+334,Sport,Sport,1
+335,Prostitution,Minderjähriger,0
+336,Demokratie,indirekte Demokratie,1
+337,Sport,wichtiger Teil Australiens,0
+338,Kunst,Herausforderung,0
+339,Religion,Weltanschauungssystem,0
+340,Kunst,Rückkehr,0
+341,Internet,Reihe vernetzter Internet Protokolle,0
+342,Sport,wichtiger Zeitvertreib,0
+343,Religion,Form der Zensur,0
+344,Demokratie,Herrenvolk Demokratie,1
+345,Technologie,private Branchenexperten,0
+346,Impfstoff,toxoider Impfstoff,0
+347,Medikament,Agonist des Androgen,0
+348,Technologie,Bewegung,0
+349,Sport,gemeinsame Aktivitäten,0
+350,Kunst,pädagogisches Programm,0
+351,Prostitution,weiterer grauer Bereich,0
+352,Drogen,Verbrechen,1
+353,Religion,Reihe,0
+354,Kunst,Thema,0
+355,Medikament,Arzneimittel,1
+356,Prostitution,administrativer aber nicht strafrechtlicher Straftat,0
+357,Demokratie,Tendenz,0
+358,Atomwaffen,nukleare Sprengstoffe,1
+359,Demokratie,Regierungssystem,1
+360,Flüchtlinge,verdrängte Bevölkerungsgruppen,0
+361,Globalisierung,Tatsache des Lebens,0
+362,Drogen,Formen des Escapismus,0
+363,Sport,Formen der körperlichen Aktivität,0
+364,Religion,Pre Christen Friedenssysteme,0
+365,Euthanasie,schwere Verbrechen,0
+366,Internet,IKT,1
+367,Klimawandel,so große Herausforderung,0
+368,Abtreibung,Familienplanungsdienste,0
+369,Prostitution,Manifestationen männlicher sexueller Macht,0
+370,Impfstoff,Schuss,0
+371,Smartphone,tragbares Gerät,0
+372,Religion,gemeinsame theologische Haltung,0
+373,Smartphone,Fußgänger,0
+374,Rauchen,Zigarettenstumpf,1
+375,Kapitalismus,Art,0
+376,Abtreibung,vorläufige Schritte,0
+377,Internet,weiteres wichtiges Thema,0
+378,Medikament,strukturelles oder funktionelles Analoga einer kontrollierten Substanz,0
+379,Steuer,Verschmutzungssteuer,0
+380,Todesstrafe,lange ungenutzte Strafe,0
+381,Globalisierung,soziale Kraft der wirtschaftlichen Globalisierung,1
+382,Technologie,wertvolle Hilfe,0
+383,Technologie,Produkte,0
+384,Internet,Ressourcen,0
+385,Rauchen,großer Risikofaktor,0
+386,Drogen,Manipulationen,0
+387,Klimawandel,globale Sicherheitsfragen,0
+388,Globalisierung,Phase,0
+389,Abtreibung,Verfahren,0
+390,Religion,Religion,1
+391,Demokratie,sozialen Organisation,0
+392,Medikament,Noradrenalin Freisetzungsmittel,0
+393,Globalisierung,wesentlicher Faktor,0
+394,Rauchen,wichtiges präventives Instrument,0
+395,soziale Medien,Online Ressourcen,0
+396,Technologie,Teil des Bewusstseins,0
+397,Steuer,obligatorische Finanzabgabe,0
+398,Demokratie,System der demokratischen Regierungsführung,0
+399,Prostitution,vorbestehendes Thema,0
+400,Religion,Religionen,1
+401,Todesstrafe,Faktor,0
+402,Internet,Speicher und Forward Netzwerk,0
+403,Religion,andere,0
+404,Drogen,Schwarzmarktgüter,0
+405,Internet,normaler Bestandteil des Lebens,0
+406,Prostitution,Karriere Option,0
+407,Demokratie,Werk der Art,0
+408,Kapitalismus,Verfeinerung des Kapitalismus,1
+409,Technologie,breites Konzept,0
+410,Studentendarlehen,Darlehen,1
+411,Medikament,Zubereitung,0
+412,Sport,integraler Bestandteil des nationalen Lebens,0
+413,DNA,leistungsfähiges Werkzeug,0
+414,Technologie,Zeit der technologischen Entwicklung,0
+415,DNA,sprachliche Eigenschaften dieser psychischen Phänomene,0
+416,Prostitution,Hauptbestandteil der Sexbranche,0
+417,Demokratie,System der Verarbeitung,0
+418,Technologie,reife Quelle des Engagements,0
+419,Gesundheitsversorgung,wichtiges Ziel,0
+420,Demokratie,politisches Konzept,0
+421,Fettleibigkeit,Faktoren,0
+422,Religion,Zweig,0
+423,Technologie,großer Teil,0
+424,Abtreibung,Erweiterung,0
+425,Internet,globales System,0
+426,Gesundheitsversorgung,wichtiger Bestandteil der grundlegenden mütterlichen Gesundheitsversorgung,0
+427,Klimawandel,Umweltfragen,1
+428,Impfstoff,Beispiel,0
+429,Demokratie,System demokratischer Staatsführung,1
+430,Steuer,Feststeuer,0
+431,Sport,wichtiger Teil der grünländischen Kultur,0
+432,Internet,Netzwerke,1
+433,Religion,Aktivitäten,0
+434,Religion,sozial kulturelles System,0
+435,Internet,internationales Netzwerk,1
+436,Impfstoff,lebensgedämpfter Impfstoff,0
+437,Gesundheitsversorgung,Schlüsselelement der Allgemeinen Erklärung,0
+438,Religion,alte Religion,0
+439,Prostitution,unsterbliche Aktivitäten,0
+440,Technologie,Unterfeld der Philosophie,0
+441,Technologie,Chance,0
+442,Todesstrafe,Form der Strafe,0
+443,Demokratie,gewaltige Kraft demokratischer Reformen,1
+444,DNA,künstliche DNA Sequenz,0
+445,Kapitalismus,Oxymoron,0
+446,Religion,weiteres Thema,0
+447,gleichgeschlechtliche Ehe,Dinge,0
+448,Abtreibung,heikles Thema,0
+449,Sport,Kombination,0
+450,Demokratie,Modell der Demokratie,0
+451,Demokratie,Form der Demokratie,0
+452,Abtreibung,lebensbedrohliches Verfahren,0
+453,Steuer,progressive Steuer,0
+454,Internet,viel mehr ansprechendes Medium,0
+455,Prostitution,Geldstrafe,0
+456,Fettleibigkeit,gesundheitliche Probleme,1
+457,Prostitution,gemeinsamer Diskurs,0
+458,Abtreibung,Informationen,0
+459,Demokratie,Mischung,0
+460,Demokratie,strukturiertes Umfeld,0
+461,Religion,kulturelle Ausdrucksformen,0
+462,Steuer,wichtige Form der Finanzierung,0
+463,Abtreibung,Erweiterung der Abtreibungsdebatte,0
+464,Abtreibung,Angelegenheit der Menschenrechte,0
+465,Demokratie,regierendes System,0
+466,Impfstoff,Verzögerung,0
+467,Religion,Zensur,0
+468,Patriotismus,Patriotismus,1
+469,Internet,Beispiel,0
+470,Internet,ein extrem dezentralisiertes Netzwerk,0
+471,Prostitution,Form der Prostitution,0
+472,Globalisierung,Periode der Globalisierungsgeschichte,1
+473,Impfstoff,Ebola Impfstoff,1
+474,Internet,nützliches Instrument,0
+475,Flüchtlinge,wesentlicher Vertrag,0
+476,Steuer,Methode,0
+477,Sport,Handlungen,0
+478,Gesundheitsversorgung,integrierter Bestandteil des Gesundheitssystems,0
+479,Heimschule,Minderungsanstrengungen,0
+480,Kunst,Art,0
+481,Kunst,offenes Feld,0
+482,Medikament,nicht selektiver,0
+483,Religion,Mischung,0
+484,Prostitution,Formen des Geschlechts,0
+485,Religion,Illusion,0
+486,Kapitalismus,theoretisches Konzept,0
+487,Religion,ethnische Religion,1
+488,Religion,einheitliches System der Glaubens,0
+489,Demokratie,liberale Demokratie,1
+490,Medikament,Droge,1
+491,Rauchen,wichtiger Risikofaktor,0
+492,Drogen,Mitglieder der Internationalen Task,0
+493,Rauchen,Risikofaktor,0
+494,Gesundheitsversorgung,Gründe,0
+495,Demokratie,Form der Selbstverteidigung,0
+496,Technologie,wichtiges Instrument,0
+497,Internet,künstlerische Felder,0
+498,Todesstrafe,Strafe,0
+499,Abtreibung,Methode,0
+500,künstliche Intelligenz,Unfähigkeit,0
+501,Demokratie,Regierung,1
+502,Technologie,farb veränderter Film,0
+503,Doping,weltweites Übel,0
+504,Sport,langer Hemmschuh,0
+505,Religion,Angelegenheiten der Meinung,0
+506,Religion,wichtiger Teil des Mosuo,0
+507,Demokratie,Reform repräsentativer oder direkter Demokratien,0
+508,Klimawandel,schwere anhaltende und globale Bedrohung,0
+509,Religion,universelle Botschaft,0
+510,Steuer,Aufzeichnungen,0
+511,Medikament,medizinische Subspezialität,0
+512,Todesstrafe,harte Strafen,0
+513,Medikament,Serotonin Freisetzungsmittel,0
+514,Religion,Gegenstand der Debatte,0
+515,Technologie,drahtlose kurze digitale Kommunikation,0
+516,Drogen,städtische soziale Probleme,0
+517,DNA,klassisches Beispiel,0
+518,Technologie,Mittel,0
+519,Rauchen,großes Problem,0
+520,Technologie,Assay,0
+521,Internet,Dienstleister,0
+522,Religion,Essays,0
+523,Prostitution,damit verbundene Aktivitäten,0
+524,Technologie,Online Chat,0
+525,Religion,Gläubigen,0
+526,Abtreibung,Fortsetzung,0
+527,Abtreibung,Verletzung des Zivil,0
+528,Demokratie,politische Theorie,1
+529,Medikament,Zutat,0
+530,Studentendarlehen,Art,0
+531,Abtreibung,Ergebnis der weit verbreiteten Unsterblichkeit,0
+532,Steuer,Sonderfall einer Lenksteuer,0
+533,Impfung,veterinärrechtliche Kontrollmethoden,0
+534,soziale Medien,Webplattformen,1
+535,Drogen,periphere Probleme,0
+536,Steuer,Prozentsatz der steuerpflichtigen Löhne,0
+537,Monopol,Formen der Marktherrschaft,0
+538,Todesstrafe,internationale Allianz,0
+539,Demokratie,friedlicher Übergang,0
+540,Demokratie,Form sozialdemokratischer Arrangements,0
+541,Globalisierung,Begriff,0
+542,Atombombe,Atomwaffe,1
+543,Kunst,gelehrte Gesellschaft,0
+544,Religion,wesentlicher Bestandteil ihres kulturellen Lebens,0
+545,Kunst,Begriff,0
+546,Abtreibung,sicheres Verfahren,0
+547,Technologie,Ganzes,0
+548,Religion,Einfluss,0
+549,Technologie,Unterfeld der Ethik,0
+550,Technologie,Fertigungstechnik,0
+551,Kunst,Bodegón,1
+552,Impfstoff,Untereinheit Impfstoff,0
+553,Demokratie,Art freiwilliger direkter Demokratie,0
+554,Kapitalismus,politisches Modell,1
+555,Prostitution,Formen der Sexarbeit,1
+556,Internet,inhärenter Kanal,0
+557,Religion,Mantar,0
+558,Fettleibigkeit,Risikofaktor,0
+559,Demokratie,politische Theorie,1
+560,Internet,konzipiertes Computernetzwerk,1
+561,Gesundheitsversorgung,Seltenheit,0
+562,Religion,Gruppe,0
+563,Gesundheitsversorgung,fortschreitende Fragen,0
+564,Impfstoff,Grippe Impfstoff,1
+565,Gesundheitsversorgung,wichtiger Bestandteil der Gesundheitssysteme,0
+566,Religion,Fusion der traditionellen Religionspraktiken,0
+567,Kunst,maßgeblicher Einfluss,0
+568,Rauchen,wichtiger Faktor,0
+569,Internet,beliebter Ort,0
+570,Internet,MedienLenovo,0
+571,Prostitution,Formen sexueller Aktivität,0
+572,Sport,monatliche Sportmagazine,0
+573,Kunst,Kategorie,0
+574,DNA,idealer Proxy,0
+575,Prostitution,Verbrechen,0
+576,Technologie,Essays,0
+577,Demokratie,politisches System,1
+578,Klimawandel,soziale Kosten,0
+579,Rauchen,wichtige Ursache,0
+580,Monopol,Markt,0
+581,Internet,Sammlung,0
+582,Religion,wichtiger Aspekt der Identität,0
+583,Prostitution,konzeptionelles und performatives Werk kritischer und biografischer Inhalte,0
+584,Rauchen,wesentliche Ursache,0
+585,Klimawandel,signifikante langfristige Veränderung des erwarteten Musters,0
+586,Patriotismus,Ideologie,1
+587,Kapitalismus,System der Ausbeutung,0
+588,Steuer,gute Steuer,0
+589,Abtreibung,medizinisches Phänomen der spontanen Abtreibung,0
+590,Sport,Anwendungen,0
+591,Flaschenwasser,Ausnahme,0
+592,Steuer,Zwecke,0
+593,Prostitution,Form der Sexarbeit,1
+594,Kunst,vielfältige Palette,0
+595,Kapitalismus,Effekt der Regierung,0
+596,DNA,fremde DNA,0
+597,Sport,soziale Aktivitäten,0
+598,Prostitution,Transaktion,0
+599,Internet,Arten,0
+600,Prostitution,Aktivitäten,0
+601,Klimawandel,Frage,0
+602,Prostitution,Freizeiteinrichtungen,0
+603,Kunst,zweidimensionales Objekt,0
+604,Steuer,Wähler Registrierungsmaßnahmen,0
+605,Kunst,Reader,0
+606,DNA,Körperflüssigkeiten,0
+607,Sport,körperliche Aktivität,1
+608,Globalisierung,Kritik,0
+609,Flüchtlinge,Obdachlose,1
+610,Klimawandel,Feedback Prozess,0
+611,Kunst,Kunstbewegungen,0
+612,DNA,KoFaktoren,0
+613,Medikament,Medikament,1
+614,Religion,wichtiger Aspekt des sozialen Kapitals,0
+615,Impfstoff,Impfstoff,1
+616,Technologie,weitere von Oregons großen Wirtschaftskräften,0
+617,Prostitution,Formen kommerzieller Sex,0
+618,Religion,integraler Bestandteil des täglichen Lebens,0
+619,Religion,weitere Methode,0
+620,fossiler Brennstoff,Brennstoff,1
+621,Demokratie,neuer Ansatz,0
+622,Prostitution,Straftat,0
+623,Medikament,Stoffe,0
+624,Abtreibung,kontroverse politische Frage,0
+625,Abtreibung,Ausübung dieses Rechts,0
+626,Impfstoff,gestrichener,0
+627,DNA,relativ starres Polymer,0
+628,Kapitalismus,wirtschaftliches und soziales System,1
+629,Religion,Angelegenheit,0
+630,Kunst,Zeichen,1
+631,Religion,Faktor,0
+632,Fettleibigkeit,damit verbundene Krankheiten,0
+633,Prostitution,Form,0
+634,Technologie,enorme Menge,0
+635,Kunst,renommierte Kunsthochschule,0
+636,Medikament,chemische Substanz,1
+637,Sport,wichtiges Ereignis,0
+638,Kapitalismus,Ansatz,0
+639,Internet,moderne Technologie,0
+640,Medikament,North,0
+641,Impfstoff,wirksames Instrument,0
+642,Rauchen,Praxis,0
+643,Impfung,wesentlicher Bestandteil,0
+644,Klimawandel,bedeutende und dauerhafte Veränderung der statistischen Verteilung,0
+645,Abtreibung,Thema,0
+646,Fettleibigkeit,Antwort,0
+647,Demokratie,Demokratie,1
+648,Technologie,Reihe,0
+649,Steuer,Quelle der Einnahmen,0
+650,Smartphone,Motor,0
+651,Steuer,einheitlicher Preis,0
+652,Gesundheitsversorgung,Krankenschwester,0
+653,Todesstrafe,gesetzliche Strafe,0
+654,Kunst,schwierige Begriffsbestimmung,0
+655,Prostitution,administrative aber nicht kriminelle Straftat,0
+656,Religion,universal etabliertes Phänomen,0
+657,Kunst,Tendenz,0
+658,Internet,elektronische Formen des Spiels,0
+659,gleichgeschlechtliche Ehe,verfassungsrechtliches Recht,0
+660,Globalisierung,Fahrer,0
+661,Sport,wesentlicher Bestandteil der bahamischen Kultur,0
+662,Kapitalismus,Pyramide,0
+663,Prostitution,zunehmend großer Teil der chinesischen Wirtschaft,0
+664,Gesundheitswesen,unabhängige schwedische Regierungsstelle,0
+665,Doping,sanktionierte Verhaltensweisen,0
+666,Kunst,Kunstwerke,0
+667,Internet,Systeme,0
+668,DNA,gut entwickeltes Material,0
+669,Monopol,wirtschaftliches Konzept,0
+670,Monopol,Braunkohle,0
+671,Impfstoff,Krebs Impfstoff,0
+672,Kapitalismus,Wirtschaftssystem,1
+673,Prostitution,sexuelle Ausbeutung,1
+674,Religion,bona fide Religion,0
+675,Klimawandel,drängende ökologische Krisen,0
+676,Religion,Methode,0
+677,Internet,weltweites Netzwerk,1
+678,Religion,akutes Thema der Diskussion,0
+679,Internet,integraler Bestandteil des modernen Lebens,0
+680,Steuer,Vorschlag,0
+681,Kunst,globale Tätigkeit,0
+682,Kunst,menschliche Aktivität,0
+683,Kunst,Einrichtungen,0
+684,Kapitalismus,theoretisches System,0
+685,Technologie,zusätzliche Funktion,0
+686,Impfung,schwieriges politisches Problem,0
+687,Prostitution,ernstes Problem,0
+688,Technologie,Rechtsträger,0
+689,Religion,wichtiger Bestandteil ihres täglichen Lebens,0
+690,Internet,vereinfachtes Beispiel,0
+691,Internet,Quelle ständiger Innovation,0
+692,Internet,ähnliche Verbindung,0
+693,Kapitalismus,gezielte Einbeziehung der Homosexuellen Gemeinschaft,0
+694,Abtreibung,umstrittenes und divisives Thema,0
+695,Steuer,Preiskontrolle,0
+696,Gesundheitsversorgung,Elemente des Wohlfahrtsstaates,0
+697,Fettleibigkeit,großer Risikofaktor,0
+698,Prostitution,Geschenk,0
+699,Klimawandel,eine globale Frage,0
+700,Globalisierung,Prozess,0
+701,Gesundheitsversorgung,Gesundheitsfinanzierung,0
+702,Mindestlohn,Unternehmen,0
+703,Religion,zentrales Thema,0
+704,DNA,Duplex,1
+705,Steuer,indirekte Steuer,0
+706,Religion,monotheistisches Glaubenssystem,1
+707,Prostitution,administratives Vergehen,0
+708,Klimawandel,konvergierende Katastrophen,0
+709,Demokratie,delegativen Demokratie,1
+710,Technologie,webbasierte Kollaborationstools,0
+711,Fettleibigkeit,Voraussetzung,0
+712,Prostitution,Sexualarbeit,1
+713,Sport,Formen der körperlichen Bewegung,1
+714,Demokratie,universeller Wert,0
+715,Globalisierung,Projekt,0
+716,Fettleibigkeit,Symptom des Cushing,0
+717,Demokratie,Betrug,0
+718,Internet,Kraft,0
+719,Kapitalismus,Konzept,0
+720,Abtreibung,Sünde,0
+721,Klimawandel,wichtiger Faktor,0
+722,Demokratie,Gerichtsbarkeit,0
+723,Flüchtlinge,umfassender und starrer Rechtskodex,0
+724,Demokratie,Form der Regierung,1
+725,Klimawandel,Beispiel,0
+726,Steuer,Steuer,1
+727,Sport,Programmierung,0
+728,Kunst,begrenztes Thema,0
+729,Religion,wichtiger und in vielen Fällen das zentrale Element des indischen Lebens,0
+730,Religion,universelles Phänomen,0
+731,Gesundheitsversorgung,Erfordernisse,0
+732,Gesundheitsversorgung,Weg,1
+733,Demokratie,System der demokratischen Regierung,0
+734,Religion,Glaube,1
+735,Prostitution,Sex Arbeit,1
+736,Abtreibung,Frage der Zufriedenheit,0
+737,Klimawandel,wichtige Ursache,0
+738,Steuer,Graduierung,0
+739,Kunst,weiterer Begriff,0
+740,Religion,wichtiger Organisationsprinzip,0
+741,Sommerferien,Schulreise,0
+742,Gesundheitsversorgung,weiterer bestimmender Faktor,0
+743,Rauchen,Indikatoren,0
+744,Kunst,Theorie,0
+745,Euthanasie,kontroverse Angelegenheit,0
+746,Technologie,Methode,0
+747,Impfstoff,personalisierter Impfstoff,0
+748,Fettleibigkeit,Bedingung,1
+749,DNA,Schlüssel,0

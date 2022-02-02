@@ -1,0 +1,1050 @@
+Index: Stanza_Pattern.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Stanza_Pattern.py b/German Model/Stanza_Pattern.py
+rename from Stanza_Pattern.py
+rename to German Model/Stanza_Pattern.py
+--- a/Stanza_Pattern.py	(revision 955e85d7904e028da1c8bbe86d2bdbe5bff8c073)
++++ b/German Model/Stanza_Pattern.py	(date 1636213603552)
+@@ -27,7 +27,9 @@
+         1. Do the sentence segmentation of the text
+         2. Add the dc to the regex pattern
+         3. Extract the pattern from each sentence
+-        4. Loop through all the matches and get the EC and the whole matched sentences
++        4. Loop through all the matches and get the EC
++        5. check the Genetiv
++        6. getthe whole matched sentences
+     pattern_extraction_sentence(sentence, pattern):
+         This method uses the token-level regular expression to match our desired patterns
+     pattern_dc_construction(dc, pattern):
+@@ -53,7 +55,19 @@
+             the stanza german pipeline
+         """
+         self.client = CoreNLPClient(properties='german', annotators=['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'parse'], timeout=30000, memory='16G')
+-        self.pattern = ['/ist/ /ein|eine/', '/ist/ /ein/ /Beispiel/ /für/', '/ist/ /eine/ /Form/ /des|der|von|vom/', '/oder/ /andere/ /Arten/ /des|der|von|vom/', '/oder/ /eine/ /andere/ /Art/ /des|der|von|vom/']
++        self.pattern = ['/ist/ /ein|eine/',
++                        '/ist/ /eine/ /Art/ /des|der|von|vom/',
++                        '/ist/ /eine/ /Form/ /des|der|von|vom/',
++                        '/ist/ /ein/ /Beispiel/ /für/',
++                        '/ist/ /ein/ /Spezialfall/ /des|der|von|vom/',
++                        '/oder/ /andere/ /Arten/ /des|der|von|vom/',
++                        '/oder/ /eine/ /andere/ /Art/ /des|der|von|vom/',
++                        '/oder/ /ander|andere|anderes/',
++                        '/und/ /ander|andere|anderes/',
++                        '/und/ /andere/ /Arten/ /des|der|von|vom/'
++                        # '/einschließlich',
++                        # '/inklusive'
++                        ]
+         self.nlp_spacy = spacy.load("de_core_news_sm")
+         self.nlp_stanza = stanza.Pipeline(lang='de', processors='tokenize, mwt, lemma, pos, depparse')
+ 
+@@ -126,13 +140,15 @@
+         # print(child)
+         # print(child_root)
+ 
+-    def pattern_extraction_text(self, text, dc, pattern):
++    def pattern_extraction_text(self, sentences, dc, pattern):
+         """
+         This method consists of several parts:
+         1. Do the sentence segmentation of the text
+         2. Add the dc to the regex pattern
+         3. Extract the pattern from each sentence
+-        4. Loop through all the matches and get the EC and the whole matched sentences
++        4. Loop through all the matches and get the EC
++        5. check the Genetiv
++        6. getthe whole matched sentences
+ 
+         Parameters
+         ----------
+@@ -149,23 +165,34 @@
+             a list contains of every pair of matched (dc, ec, whole sentence)
+ 
+         """
+-        sentences = self.sent_segmentation(text)  # sentence segmentation
+         pattern_dc = self.pattern_dc_construction(dc, pattern)  # concatenate dc and pattern
+ 
+         list_rows = []  # store the every pair of (dc, ec, whole sentence)
+         for sent in sentences:
+             match = self.pattern_extraction_sentence(sent, pattern_dc)  # find the match from the pattern
+             dependency_parse = self.stanza_processor_sentence(sent)  # the dependency parser of the sentence
+-
+             for index in range(match["sentences"][0]["length"]):
+                 begin = match['sentences'][0][str(index)]["begin"]  # get the beginning index of each matched sentence
+                 end = match['sentences'][0][str(index)]["end"]  # get the end index of each matched sentence
+ 
+                 head = dependency_parse[0].words[end-1].head  # the head of the end index word is our potential EC
++                print(dependency_parse)
++
+                 ec = " ".join([dependency_parse[0].words[i].text for i in range(end, head)])  # get EC
+ 
+-                whole_sentence = [dependency_parse[0].words[i].text for i in range(begin, head)]  # get our whole matched sentence
++                # This part of code will try to determine
++                if dependency_parse[0].words[head].feats is not None and dependency_parse[0].words[head].feats[:9] == 'Case=Gen|':
++                    for i in range(head, len(dependency_parse[0].words)):
++                        ec += ' '
++                        ec += dependency_parse[0].words[i].text
++                        if  dependency_parse[0].words[i].head == head:
++                            end_of_sentence = i
++                            break
++
++                whole_sentence = [dependency_parse[0].words[i].text for i in range(begin, end)]  # get our whole matched sentence till end
+                 whole_sentence = " ".join(whole_sentence)
++                whole_sentence += ' '
++                whole_sentence += ec  # plus the ec
+ 
+                 dict_row = {'DC': dc, 'EC': ec, 'Whole Sentence': whole_sentence}  # put in the dict
+                 list_rows.append(dict_row)
+@@ -232,21 +259,17 @@
+ 
+        """
+         list_rows = []
++        # dc_list = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic.csv", index_col=0)
++        sentences = self.sent_segmentation(text)  # sentence segmentation
+         for pattern in self.pattern:
+-            list_rows += self.pattern_extraction_text(text, 'Das', pattern)
++            # for dc in dc_list.index:
++            list_rows += self.pattern_extraction_text(sentences, 'SSO', pattern)
+         extracted_sentences = pd.DataFrame(list_rows)
+         print(extracted_sentences)
+ 
+ 
+ if __name__ == '__main__':
+     text = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles_de/" + "Waffenkontrolle (Recht)" + ".txt").read()
+-    database = [
+-        "Der Freiwilligendienst ist eine Form von freiwilligen Aktivitäten und weist folgende zusätzliche Merkmale auf",
+-        "Eidetic IntuitionenIntuition soll eine Form des direkten Zugriffs sein.",
+-        "Vortäuschen ist eine Form der Lüge.",
+-        "Betrachtet diese Methode als eine Form des spirituellen Hausputzes.",
+-        "Der Streit ist ja auch eine Form von Begegnung.",
+-        "Das ist im Grunde genommen eine Form der Prokrastination."]
+     database = "Der Freiwilligendienst ist eine Form von freiwilligen Aktivitäten und weist folgende zusätzliche " \
+                "Merkmale auf, Eidetic IntuitionenIntuition soll eine Form des direkten Zugriffs sein. Das ist eine " \
+                "Form der Lüge. Betrachtet diese Methode als eine Form des spirituellen Hausputzes. Der Streit ist ja " \
+@@ -258,8 +281,9 @@
+                "Das oder andere Arten der Ausstattung mit Regalen." \
+                "Dieser Eintrag kann für ein Land, eine Organisation oder eine andere Art von Gruppierung stehen." \
+                "Wenn Sie ein Dokument oder eine andere Art von Datei an einen Drucker senden, entsteht daraus ein Druckauftrag." \
+-               "Die Router verfügen über das oder eine andere Art von starke Internetverbindung mit dem Internet."
+-
++               "Die Router verfügen über das oder eine andere Art von starke Internetverbindung mit dem Internet." \
++               "SSO ist eine Art von Zugriffskontrolle der Softwaresysteme"
++    #database = 'Verwaltungsaufgaben, inklusive Materialhandhabung, Computerarbeit und Kopieren.'
+     S = Stanza_Pattern()
+     # print(S.tokenization('Der Freiwilligendienst'))
+     S.process(database)
+Index: WebScraper.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/WebScraper.py b/English Model/WebScraper.py
+rename from WebScraper.py
+rename to English Model/WebScraper.py
+--- a/WebScraper.py	(revision 955e85d7904e028da1c8bbe86d2bdbe5bff8c073)
++++ b/English Model/WebScraper.py	(date 1636115999880)
+@@ -3,6 +3,7 @@
+ # wikipedia api
+ import wikipediaapi
+ 
++from ast import literal_eval
+ 
+ class wikiscraper:
+     """
+@@ -79,8 +80,13 @@
+ 
+ 
+ if __name__ == "__main__":
+-    w = wikiscraper()
+-    w.get_articles("Waffenkontrolle (Recht)")
++    # w = wikiscraper()
++    # w.get_articles("Waffenkontrolle (Recht)")
+     # print(w.dc_outlink.iloc[0, 0][0])
+-    # df = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic_with_outlinks.csv')
++    df = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic_with_outlinks.csv')
++    a = df["outlinks"].apply(literal_eval)
++
++    for i in a[0]:
++        print(i)
++
+     # print(df.iloc[0, -1])
+Index: German Model/Translator.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/German Model/Translator.py b/German Model/Translator.py
+new file mode 100644
+--- /dev/null	(date 1636113603947)
++++ b/German Model/Translator.py	(date 1636113603947)
+@@ -0,0 +1,43 @@
++from deep_translator import LingueeTranslator
++import wikipediaapi
++import spacy
++
++# class Translator:
++#     def __init__(self):
++#         pass
++#
++#     def
++
++if __name__ == '__main__':
++    def sent_segmentation(text):
++        """
++        This method performs the sentence segmentation of a text with help of spacy
++
++        Parameters
++        ----------
++        text: String
++            the string of a text
++
++        Returns
++        ------
++        List:
++            a list contains of the result of the sentence segmentation of a text
++
++        """
++        sentences = []
++        nlp_spacy = spacy.load("de_core_news_sm")
++        doc = nlp_spacy(text)
++        assert doc.has_annotation("SENT_START")
++        for sent in doc.sents:
++            sentences.append(sent.text)  # append sentence to list
++        return sentences
++    wiki_wiki = wikipediaapi.Wikipedia('en')
++
++    page_py = wiki_wiki.page('Gun Control')
++    # page_py_de = page_py.langlinks['de']
++    text = page_py.text
++    print(text)
++    possible_list = ['See Also', 'Notes' 'References' 'Bibliography' 'Further reading', 'External links']
++
++    # print(sent_segmentation(text))
++
+Index: German Model/Filter_de.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/German Model/Filter_de.py b/German Model/Filter_de.py
+new file mode 100644
+--- /dev/null	(date 1636114684120)
++++ b/German Model/Filter_de.py	(date 1636114684120)
+@@ -0,0 +1,169 @@
++# regular expression
++import re
++# os
++from os import listdir
++from os.path import isfile, join
++# NER
++import spacy
++# word2vec
++from HelpFunctions_de import Word2vec
++# stopwords
++from nltk.corpus import stopwords
++# basic functions
++import pickle
++import pandas as pd
++
++
++class Filter:
++    def __init__(self, df):
++        self.df = df
++        self.stop_words = set(stopwords.words('english'))  # english stopwords
++
++    def preprocessing(self, df):
++        """ This function finds the stopwords in the sentence"""
++        df.loc[:, 'stop_words'] = True
++        for i in range(len(df)):
++            EC = df.at[i, 'EC']
++            if EC.lower() not in self.stop_words:  # if our EC not a stopword
++                df.at[i, 'stop_words'] = False
++
++        return df
++
++    def directionality(self, concept, ratio=0.8):
++        pass
++
++    def named_entity(self, df):
++        """ This function recognizes all named entities"""
++        NER = spacy.load("de_core_web_sm")
++        df.loc[:, 'ner'] = False
++        for i in range(len(df)):
++            EC = df.at[i, 'EC']
++            if not NER(EC.lower()).ents:  # if not NER exists in EC
++                df.at[i, 'ner'] = True
++
++        return df
++
++    def frequency_ratio(self, df, dict_freq=None):
++        """ This function calculates the frequency of a word"""
++        if dict_freq == None:  # no existing frequency dictionary
++            Concept = list(set(list(df.DC.values) + list(df.EC.values)))
++            df['DC_freq'] = 0
++            df['EC_freq'] = 0
++            frequency_counter = {concept: 0 for concept in Concept}
++
++            path = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles/"
++            files = [f for f in listdir(path) if isfile(join(path, f))]  # get all the files in the folder wiki titles
++
++            for concept in Concept:
++                counter = 0
++                for file in files:
++                    if file == ".DS_Store":
++                        continue
++                    try:
++                        text = open(path + file, "r", encoding="utf-8").read()
++                        pattern = r"\b" + concept.lower() + r"\b"
++                        counter += len(self.re_match(pattern, text.lower())) # accumulate the number of the concepts
++                    except FileNotFoundError:
++                        pass
++                frequency_counter[concept] += counter
++        else:  # uses existing frequency dictionary
++            with open(dict_freq, "rb") as f:
++                frequency_counter = pickle.load(f)
++
++        for i in range(len(df)):
++            DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
++            df.at[i, 'DC_freq'] = frequency_counter[DC]
++            df.at[i, 'EC_freq'] = frequency_counter[EC]
++
++        return df
++
++    def distributional_similarity(self, df):
++        """ This function calculates the distributional similarity between DC and EC"""
++        df.loc[:, 'distributional_similarity'] = 0.0  # initialization
++        # import the class Word2vec from Helfunctions to calculate the word embeddings
++        w = Word2vec(df, '/Users/kangchieh/Downloads/Bachelorarbeit/cc.en.100.bin')
++        word2vec = w.embedding()
++        for i in range(len(df)):
++            DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
++            df.at[i, 'distributional_similarity'] = w.cos_similarity(word2vec[DC], word2vec[EC])  # calculate cosine similarity
++
++        return df
++
++    def substring(self, df):
++        """ EC cannot be the substring of DC or vice versa"""
++        df.loc[:, 'substring'] = True
++        for i in range(len(df)):
++            DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
++            if DC.lower() not in EC.lower() and EC.lower() not in DC.lower():  # if EC not a substring of DC and vice versa
++                df.at[i, 'substring'] = False
++
++        return df
++
++    def processing(self):
++        """ This function processes all the filters at once"""
++        preprocess = self.preprocessing(self.df)
++        substring = self.substring(preprocess)
++        named_entity = self.named_entity(substring)
++        dsimilarity = self.distributional_similarity(named_entity)
++        frequency = self.frequency_ratio(dsimilarity)
++
++        return frequency
++
++    def filter(self, freq=0.01, dsim=0.3, path="/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/frequency.pkl"):
++        """ This function filters our given input and return only the ones that fit our criteria"""
++        df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_filter_number.csv")
++        with open(path, "rb") as f:
++            frequency = pickle.load(f)
++
++        for i in range(len(df)):
++            DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
++            if not df.at[i, 'stop_words'] and df.at[i, 'ner'] and not df.at[i, 'substring'] \
++                    and df.at[i, 'distributional_similarity'] > dsim and min(frequency[DC] / frequency[EC],
++                                                                             frequency[EC] / frequency[DC]) > freq:
++                df.at[i, 'good expansion'] = 1
++            else:
++                df.at[i, 'good expansion'] = 0
++        return df[df["good expansion"] == 1.0]
++
++    def semantic_relatedness(self, concept):
++        pass
++
++    def count_occurrences(self, word, sentence):
++        return sentence.lower().count(word)
++
++    def re_match(self, pattern, text):
++        """ This functions uses re to find the matched pattern in our text"""
++        pattern = re.compile(pattern)
++        match = pattern.findall(text)
++        return match
++
++
++if __name__ == "__main__":
++    #df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_con.csv", index_col=0)
++    # f = Filter(df)
++    # f.frequency_ratio(df)
++    # df1 = f.filter()
++
++
++    # df1.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/sim_0.3_freq=0.01.csv")
++    path = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles/"
++    files = [f for f in listdir(path) if isfile(join(path, f))]  # get all the files in the folder wiki titles
++    words_length = 0
++    possible_list = ['See Also', 'Notes' 'References' 'Bibliography' 'Further reading', 'External links']
++
++    for file in files:
++        min_length = float('inf')
++        if file == ".DS_Store" or ':' in file:
++            continue
++        try:
++            text = open(path + file, "r", encoding="utf-8").read()
++            # text_length = text.split(' ')
++            for p in possible_list:
++                text_remove = text.split(p, 1)[0]
++                min_length = min(len(text_remove), min_length)
++            min_length = min(len(text), min_length)
++            words_length += min_length
++        except FileNotFoundError:
++            pass
++    print(words_length)
++
+Index: German Model/Training_de.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/German Model/Training_de.py b/German Model/Training_de.py
+new file mode 100644
+--- /dev/null	(date 1635936770040)
++++ b/German Model/Training_de.py	(date 1635936770040)
+@@ -0,0 +1,333 @@
++# string to list
++from ast import literal_eval
++# wiki, wordnet and word2vec
++from HelpFunctions_de import Wiki, Wordnet, Word2vec
++# sentiment analysis
++from textblob.sentiments import NaiveBayesAnalyzer
++from textblob import Blobber
++# sklearn
++from sklearn.linear_model import LogisticRegression
++from sklearn.model_selection import cross_val_score, train_test_split
++from sklearn.compose import ColumnTransformer
++from sklearn.metrics import mean_squared_error
++from sklearn.metrics import f1_score
++from sklearn.pipeline import Pipeline
++from sklearn.preprocessing import StandardScaler
++# basic functions
++import pickle
++import numpy as np
++import pandas as pd
++
++
++class GetFeature:
++    """
++        A class used to represent an Animal
++
++        ...
++
++        Attributes
++        ----------
++        df : Dataframe
++            a formatted string to print out what the animal says
++
++        Methods
++        -------
++        get_wiki(df)
++            Prints the animals name and what sound it makes
++        get_wordnet(df)
++        sentiment(text)
++        sentiment_analysis(df)
++        load_sentiment_analysis(path, df)
++        load_distributional_similarity(path, df)
++        word_embedding(df)
++        processing()
++        """
++
++    def __init__(self, df):
++        """
++        Parameters
++        ----------
++        df : Dataframe
++            A Dataframe consists of
++            1. DC
++            2. EC
++            3. stop_words
++            4. substring
++            5. ner
++            6. distributional_similarity
++            7. DC_freq
++            8. EC_freq
++            9. good expansion
++            10. DC_embedding
++            11. EC_embedding
++            12. shared_categories
++            13. shared_links
++            14. hypernym
++            15. hyponym
++            16. co-hypernym
++            17. synonym
++            18. DC_Polarity_diff
++            19. EC_Polarity_diff
++            20. freq_ratio
++        """
++        self.df = df
++
++    def get_wiki(self, df):
++        w = Wiki(df)
++        return w.processing()
++
++    def get_wordnet(self, df):
++        w = Wordnet(df)
++        return w.processing()
++
++    def sentiment(self, text):
++        tb = Blobber(analyzer=NaiveBayesAnalyzer())
++        sen = tb(text).sentiment
++        return [sen.p_pos, sen.p_neg]
++
++    def sentiment_analysis(self, df):
++        sentiment_dict = {}
++        for i in range(len(df)):
++            DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
++            if DC not in sentiment_dict:
++                sentiment_dict[DC] = self.sentiment(DC)
++            if EC not in sentiment_dict:
++                sentiment_dict[EC] = self.sentiment(EC)
++
++        file = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment.pkl", "wb")
++        pickle.dump(sentiment_dict, file)
++        file.close()
++        # df['DC_Polarity'] = df['DC'].apply(self.sentiment)
++        # df['EC_Polarity'] = df['EC'].apply(self.sentiment)
++        return df
++
++    def load_sentiment_analysis(self, path, df):
++        with open(path, "rb") as f:
++            sentiment_dict = pickle.load(f)
++        for i in range(len(df)):
++            DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
++            df['DC_Polarity_diff'] = sentiment_dict[DC][0] - sentiment_dict[DC][1]
++            df['EC_Polarity_diff'] = sentiment_dict[EC][0] - sentiment_dict[EC][1]
++
++            return df
++
++    def load_distributional_similarity(self, path, df):
++        dsim = pd.read_csv(path, index_col=0)
++        df['distributional_similarity'] = dsim['distributional_similarity']
++
++        return df
++
++    def word_embedding(self, df):
++        w = Word2vec(df, '/Users/kangchieh/Downloads/Bachelorarbeit/cc.en.100.bin')
++        word2vec = w.embedding()
++        dc_embedding = []
++        ec_embedding = []
++        for i in range(len(df)):
++            DC, EC = df.at[i, 'DC'], df.at[i, 'EC']
++            dc_embedding.append(list(word2vec[DC]))
++            ec_embedding.append(list(word2vec[EC]))
++
++        df['DC_embedding'] = dc_embedding
++        df['EC_embedding'] = ec_embedding
++        return df
++
++    def processing(self):
++        wordembed = self.word_embedding(self.df)
++        wiki = self.get_wiki(wordembed)
++        wordnet = self.get_wordnet(wiki)
++        sentiment = self.load_sentiment_analysis(
++            "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training/sentiment.pkl", wordnet)
++        final_result = self.load_distributional_similarity(
++            "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_filter_number.csv", sentiment)
++
++        final_result['freq_ratio'] = final_result.apply(
++            lambda row: min(row.DC_freq / row.EC_freq, row.EC_freq / row.DC_freq), axis=1)
++
++        return final_result
++
++
++class Training:
++    def __init__(self, df):
++        """
++        Parameters
++        ----------
++        df : Dataframe
++            A Dataframe consists of
++            0. DC
++            1. EC
++            2. Original
++            3. stop_words
++            4. substring
++            5. ner
++            6. distributional_similarity
++            7. DC_freq
++            8. EC_freq
++            9. good expansion
++            10. DC_embedding
++            11. EC_embedding
++            12. shared_categories
++            13. shared_links
++            14. hypernym
++            15. hyponym
++            16. co-hypernym
++            17. synonym
++            18. DC_Polarity_diff
++            19. EC_Polarity_diff
++            20. freq_ratio
++        log_reg: sklearn.linear_model
++            a sklearn model which performs binary or multiclass classification
++        new_df: Dataframe
++            new_df is predefined as None but will later be assigned to an adjusted version of df
++        X: Dataframe
++            X is predefined as None but will later be assigned to our training data
++        Y: Series
++            Y is predefined as None but will later be assigned to our output target
++        """
++        self.df = df
++        self.log_reg = LogisticRegression()
++        self.new_df = None
++        self.X, self.y = None, None
++
++    def cleaning_data(self):
++        """ This function selects only the features needed in the training"""
++        self.new_df = self.df.drop(self.df.columns[[2, 3, 4, 5, 7, 8]], 1)
++        self.y = self.new_df.pop('good expansion')  # target output
++        self.X = self.new_df.iloc[:, 2:]  # training input
++
++        # Since our lists are saved as string we have to transform them back to list
++        self.X['DC_embedding'] = self.X['DC_embedding'].apply(literal_eval)
++        self.X['EC_embedding'] = self.X['EC_embedding'].apply(literal_eval)
++
++    def building_pipeline(self):
++        """ This function scales two columns 'shared_links' and 'shared_categories' with StandardScaler()"""
++        pipeline = Pipeline([
++            ('std_scaler', StandardScaler()),
++        ])
++        full_pipeline = ColumnTransformer([
++            ("num", pipeline, ['shared_links', 'shared_categories']),
++        ])
++
++        self.X[['shared_links', 'shared_categories']] = pd.DataFrame(full_pipeline.fit_transform(self.X))
++
++    def gettint_input(self):
++        """ This function gets all training data from the same row to a list"""
++        # self.X['shared_links'] = StandardScaler().fit_transform(self.X['shared_links'].values).tolist( )
++        # self.X['shared_categories'] = StandardScaler().fit_transform(self.X['shared_categories'].values)
++        self.X["input"] = self.X.apply(lambda row: self.row_to_list(row), axis=1)
++        self.X["input"] = self.X["input"].apply(lambda x: self.flatten(x))
++
++    def row_to_list(self, row):
++        """
++        This function make a Dataframe row values to one list
++        Parameters
++        ----------
++        row: Series
++            a row in a Dataframe
++
++        Returns
++        -------
++        list:
++            a from Series converted nested list
++
++        """
++        return row.tolist()
++
++    def flatten(self, l):
++        """
++        This functions flattens the multidimensional object in a list to one dimension
++
++        Parameters
++        ----------
++        l: List
++            a from above function converted nested list
++
++        Returns
++        -------
++        list:
++            a list contains only of one dimensional object
++
++        """
++        new_l = []
++        for sub in l:
++            try:
++                for item in sub:
++                    new_l.append(item)
++            except TypeError:
++                new_l.append(sub)
++        return new_l
++
++    def split_data(self, x, y, size):
++        """
++        This functions splits our input and output data into train and test data
++
++        Parameters
++        ----------
++        x: Numpy array
++            a numpy array of input data
++        y: Numpy array
++            a numpy array of target data
++        Returns
++        ------
++        List:
++            a list contains of our split data
++
++        """
++        return train_test_split(x, y, test_size=size)
++
++    def logistic_regression(self):
++        """ This function performs logistic regression and prints the result at the end"""
++        input_X = np.array([np.array(x) for x in self.X["input"].values])
++        input_y = np.array(self.y.values)
++        X_train, X_test, y_train, y_test = self.split_data(input_X, input_y, 0.2)
++        self.log_reg.fit(X_train, y_train)
++
++        test_predictions= self.log_reg.predict(X_test)
++
++        print("Predictions: ", test_predictions)
++        print("Labels:      ", y_test)
++        print("Sqrt MSE:    ", self.mean_square_error(test_predictions, y_test))
++        #rint("f1 Score:    ", self.f1_score(test_predictions, y_test))
++
++    def cross_validation(self, model):
++        """
++        This function performs cross validation and prints the result at the end
++        Parameters
++        ----------
++        model: sklearn model
++            a model to use to fit the data
++        """
++        input_X = np.array([np.array(x) for x in self.X["input"].values])
++        input_y = np.array(self.y.values)
++        scores = cross_val_score(model, input_X, input_y,
++                                 scoring="neg_mean_squared_error", cv=5)
++        tree_rmse_scores = np.sqrt(-scores)
++        print("Scores:", tree_rmse_scores)
++        print("Mean:  ", tree_rmse_scores.mean())
++        print("Standard deviation:", tree_rmse_scores.std())
++
++    def mean_square_error(self, y_test, test_predictions):
++        reg_mse = mean_squared_error(y_test, test_predictions)
++        reg_rmse = np.sqrt(reg_mse)
++
++        return reg_rmse
++
++    def f1_score(self, y_test, test_predictions):
++        f1_score(y_test, test_predictions, average='weighted')
++
++
++if __name__ == "__main__":
++    # data = pardata.load_dataset('wikipedia_oriented_relatedness')
++    # print(data)
++    # df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/sim=0.3_freq=0.01.csv", index_col=0)
++    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training/v1.csv", index_col=0)
++
++    # g = GetFeature(df)
++    # df1 = g.processing()
++    # df1.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training/v1.csv")
++
++    t = Training(df)
++    t.cleaning_data()
++    t.building_pipeline()
++    t.gettint_input()
++    t.logistic_regression()
++    t.cross_validation(t.log_reg)
+Index: German Model/HelpFunctions_de.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/German Model/HelpFunctions_de.py b/German Model/HelpFunctions_de.py
+new file mode 100644
+--- /dev/null	(date 1635942760011)
++++ b/German Model/HelpFunctions_de.py	(date 1635942760011)
+@@ -0,0 +1,282 @@
++# Word2Vec
++import fasttext.util
++# cosine similarity
++import wikipediaapi
++from scipy import spatial
++# wordnet
++from pygermanet import load_germanet
++# basic functions
++import re
++import pandas as pd
++pd.set_option('display.max_columns', 10)  # show at most 10 columns
++
++
++class Word2vec:
++    """
++    A class used to get the relation of hypernym, hyponym, co_hypernym or synonym between DC and EC
++
++    Attributes
++    ----------
++    df:
++        a dataframe of pairs DC and EC
++    model:
++        a fasttext Word2Vec model
++    Methods
++    -------
++    clean_sentence:
++        This method cleans the sentence: every word should be lower case and has no space.
++        No special symbol allowed
++    preprocessing:
++        This method gets all the sentences
++    embedding:
++        This method applies word2Vec to all the concepts
++    cos_similarity:
++        This method returns the cosine similarity of two vectors. Because that the definition of spatial.distance.cosine
++        is 1 - cosine similarity we have to do 1 - spatial.distance.cosine = 1-(1-cosine similarity) = cosine similarity
++    """
++    def __init__(self, df, model):
++        """
++        Parameters
++        ----------
++        df:
++            a dataframe of pairs DC and EC
++        model:
++            a fasttext Word2Vec model
++        """
++        self.df = df
++        self.model = model
++
++    def clean_sentence(self, sentence):
++        """
++        This method cleans the sentence: every word should be lower case and has no space.
++        No special symbol allowed
++
++        Parameters
++        ----------
++        sentence: String
++            the string of a sentence
++
++        Returns
++        ------
++        String:
++            the string of a sentence that has already been adjusted with the above condictions
++        """
++        sentence = sentence.lower().strip()
++        sentence = re.sub(r'[^a-z0-9\s]', ' ', sentence)
++        return sentence.split()
++
++    def preprocessing(self, sentences):
++        """ This method gets all the sentences """
++        split_sentences = []
++        for sentence in sentences:
++            split_sentences.append(self.clean_sentence(sentence))
++        return split_sentences
++
++    def embedding(self):
++        """
++        This method applies word2Vec to all the concepts
++
++        Returns
++        ------
++        dict:
++            a dictionary contains of every concept and its Word2Vec embedding
++        """
++        word2vec = {}
++        ft = fasttext.load_model(self.model)  # load model
++        for i in range(len(self.df)):
++            DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
++            if DC not in word2vec:  # initialize if DC not exists
++                word2vec[DC] = ft.get_sentence_vector(DC)
++            if EC not in word2vec:  # initialize if EC not exists
++                word2vec[EC] = ft.get_sentence_vector(EC)
++        return word2vec
++
++    def cos_similarity(self, vec1, vec2):
++        """
++        This method returns the cosine similarity of two vectors. Because that the defintion of spatial.distance.cosine
++        is 1 - cosine similarity we have to do 1 - spatial.distance.cosine = 1-(1-cosine similarity) = cosine similarity
++
++        Parameters
++        ----------
++        vec1: numpy.ndarray
++            a numpy array of Word2Vec embedding
++        vec2: numpy.ndarray
++            a numpy array of Word2Vec embedding
++
++        Returns
++        ------
++        float:
++            the cosine similarity of two vectors
++        """
++        return 1 - spatial.distance.cosine(vec1, vec2)
++
++
++class Wordnet:
++    """
++    A class used to get the relation of hypernym, hyponym, co_hypernym or synonym between DC and EC
++
++    Attributes
++   ----------
++    df:
++       a dataframe of pairs DC and EC
++
++    Methods
++    -------
++    get_synset:
++       This method returns the synset of DC and EC. Synset : a set of synonyms that share a common meaning
++    co_hypernym:
++       This method determines if DC a co-hypernym of EC. 1: co_hypernym, 0: not co_hypernym
++    hypernym:
++       This method determines if DC a hypernym of EC. 1: hypernym, 0: not hypernym
++    hyponym:
++       This method determines if DC a hyponym of EC. 1: hyponym, 0: not hyponym
++    synonym:
++       This method determines if DC a synonym of EC. 1: synonym, 0: not synonym
++    processing:
++       This method processes all the methods
++    """
++    def __init__(self, df):
++        """
++        Parameters
++        ----------
++        df:
++            a dataframe of pairs DC and EC
++        relation:
++            a dataframe initialized with pairs (DC, EC) which later will be filled with 0s and 1s
++            basen on their relations on hypernym, hyponym, co_hypernym or synonym
++        gn:
++            Germatnet model
++        """
++        self.df = df
++        self.relation = pd.DataFrame(0, index=df.index, columns=['hypernym', 'hyponym', 'co-hypernym', 'synonym'])
++        self.relation = pd.concat([self.df, self.relation], axis=1)
++        self.gn = load_germanet()
++
++    def get_synset(self):
++        """ This method returns the synset of DC and EC. Synset : a set of synonyms that share a common meaning """
++        dc = []
++        ec = []
++        for i in range(len(self.df)):
++            DC, EC = self.df.at[i, 'DC'].lower().replace(" ", "_"), self.df.at[i, 'EC'].lower().replace(" ", "_")
++            dc.append(self.gn.synsets(DC))
++            ec.append(self.gn.synsets(EC))
++        self.df["synset_DC"] = dc
++        self.df["synset_EC"] = ec
++
++    def co_hypernym(self):
++        """ This method determines if DC a co-hypernym of EC. 1: co_hypernym, 0: not co_hypernym """
++        for i in range(len(self.df)):
++            DC, EC = self.df.at[i, 'synset_DC'], self.df.at[i, 'synset_EC']
++            cohyper = list(set(DC).intersection(EC))
++            if cohyper:
++                self.relation.at[i, 'co-hypernym'] = 1
++            else:
++                self.relation.at[i, 'co-hypernym'] = 0
++
++    def hypernym(self):
++        """ This method determines if DC a hypernym of EC. 1: hypernym, 0: not hypernym """
++        for i in range(len(self.df)):
++            DC, EC = self.df.at[i, 'synset_DC'], self.df.at[i, 'synset_EC']
++            for syn_ec in EC:
++                hyper = syn_ec.hypernyms()
++                for syn_dc in DC:
++                    if syn_dc in hyper:
++                        self.relation.at[i, 'hypernym'] = 1
++                        break
++                else:
++                    continue
++                break
++
++    def hyponym(self):
++        """ This method determines if DC a hyponym of EC. 1: hyponym, 0: not hyponym """
++        for i in range(len(self.df)):
++            DC, EC = self.df.at[i, 'synset_DC'], self.df.at[i, 'synset_EC']
++            for syn_ec in EC:
++                hypo = syn_ec.hyponyms()
++                for syn_dc in DC:
++                    if syn_dc in hypo:
++                        self.relation.at[i, 'hyponym'] = 1
++                        break
++                else:
++                    continue
++                break
++
++    def synonym(self):
++        """ This method determines if DC a synonym of EC. 1: synonym, 0: not synonym """
++        for i in range(len(self.df)):
++            DC, EC = self.df.at[i, 'synset_DC'], self.df.at[i, 'synset_EC']
++            for syn_ec in EC:
++                synonym = syn_ec.lemmas()
++                for syn_dc in DC:
++                    if syn_dc in synonym:
++                        self.relation.at[i, 'synonym'] = 1
++                        break
++                else:
++                    continue
++                break
++
++    def processing(self):
++        """
++        This method processes all the methods
++
++        Returns
++        ------
++        Dataframe:
++            a dataframe consists of pairs (DC, EC) and if they are hypernym, hyponym, co_hypernym or synonym
++        """
++        self.get_synset()
++        self.hypernym()
++        self.hyponym()
++        self.co_hypernym()
++        self.synonym()
++
++        return self.relation
++
++
++class Wiki:
++    def __init__(self, df):
++        # https://wikipedia-api.readthedocs.io/en/latest/README.html
++        self.df = df
++        self.wiki = pd.DataFrame(0, index=df.index, columns=['shared_categories', 'shared_links'])
++        self.wiki = pd.concat([self.df, self.wiki], axis=1)
++
++    def categories(self, page):
++        """ This method returns the category lists of a wiki-page"""
++        categories = page.categories
++
++        return categories.keys()
++
++    def links(self, page):
++        """ This method returns the links lists of a wiki-page"""
++        links = page.links
++
++        return links.keys()
++
++    def processing(self):
++        """ This method process all the above methods return the number of shared values"""
++        wiki = wikipediaapi.Wikipedia('en')
++        for i in range(len(self.df)):
++            DC, EC = wiki.page(self.df.at[i, 'DC']), wiki.page(self.df.at[i, 'EC'])
++            # categories
++            DC_cat, EC_cat = self.categories(DC), self.categories(EC)
++
++            # out links
++            DC_outlink, EC_outlink = self.links(DC), self.links(EC)
++
++            shared_cat = set(DC_cat).intersection(EC_cat)
++            shared_link = set(DC_outlink).intersection(EC_outlink)
++
++            self.wiki.at[i, 'shared_categories'] = len(shared_cat)
++            self.wiki.at[i, 'shared_links'] = len(shared_link)
++
++        return self.wiki
++
++
++if __name__ == "__main__":
++    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_filter_number.csv", index_col=0)
++    # w = Wordnet(df)
++    # df = w.processing()
++    wik = Wiki(df)
++
++
++
+diff --git a/Training.py b/English Model/Training.py
+rename from Training.py
+rename to English Model/Training.py
+diff --git a/Filter.py b/English Model/Filter.py
+rename from Filter.py
+rename to English Model/Filter.py
+diff --git a/ExtractConcept.py b/English Model/ExtractConcept.py
+rename from ExtractConcept.py
+rename to English Model/ExtractConcept.py
+diff --git a/HelpFunctions.py b/English Model/HelpFunctions.py
+rename from HelpFunctions.py
+rename to English Model/HelpFunctions.py
