@@ -17,18 +17,18 @@ There are 2 parameters:
 ## 3. Filter
 There are 4 parameters:
 ---------------------------------------
-1.embedding: Which word embedding is being used, fasttext, spacy, or statified. 
-2.extracted_topic_pairs_path: A dataframe of topic pairs (DC and EC)that are extracted in the previous step.
-3.frequency_dict: A dictionary of words and their occurrences in the corpus. It's conventient and timesaving to save them as dictionary for later use.
+1. embedding: Which word embedding is being used, fasttext, spacy, or statified. 
+2. extracted_topic_pairs_path: A dataframe of topic pairs (DC and EC)that are extracted in the previous step.
+3. frequency_dict: A dictionary of words and their occurrences in the corpus. It's conventient and timesaving to save them as dictionary for later use.
 4.corpus_path: The path of folder of our german corpus. There are about 25000 txt files in the folder.
 ## 4. Get Feature
 There are 1 parameter:
 ---------------------------------------
-1.sentiment_path: A dictionary of words and their sentiment. It's conventient and timesaving to save them as dictionary for later use.
+1. sentiment_path: A dictionary of words and their sentiment. It's conventient and timesaving to save them as dictionary for later use.
 ## 4. Training
 There are 4 parameter:
 ---------------------------------------
-1.lang: The language of the training
-2.label_de: expansion_label_de.csv
-3.label_en: expansion_label_en.csv
-4.model: Which classification model is being used, logistic regression or decision trees.
+1. lang: The language of the training
+2. label_de: expansion_label_de.csv
+3. label_en: expansion_label_en.csv
+4. model: Which classification model is being used, logistic regression or decision trees.
