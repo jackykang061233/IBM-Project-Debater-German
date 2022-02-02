@@ -8,32 +8,31 @@ from Training import Training
 if __name__ == '__main__':
     # PARAMETERS
     # RE_Pattern
-    dc_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic.csv'
-    corpus_path = '/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/'
-    extracted_sentence_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/final.txt'
+    dc_path = 'topic.csv'
+    corpus_path = 'corpus_de/'
+    extracted_sentence_path = 'final.txt'
     # Stanza_Pattern
-    #extracted_topic_pairs_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/final_topic_pairs.csv'
-    extracted_topic_pairs_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/cleaned_concept_wiki_de.csv'
+    extracted_topic_pairs_path = 'final_topic_pairs.csv'
     # Filter
-    frequency_dict = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/final_frequency.pkt"
-    sentiment_path = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt"
+    frequency_dict = "final_frequency.pkt"
+    sentiment_path = "sentiment_de.pkt"
 
-    wiki_cat = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt"
-    wiki_link = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt"
+#     wiki_cat = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt"
+#     wiki_link = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt"
     
     # Training
-    label_de = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de.csv"
-    label_en = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv"
+    label_de = "expansion_label_de.csv"
+    label_en = "expansion_label_en.csv"
     
     
     # PROCESSING
     # Extract sentences containing pattern
-    # re_pattern = Pattern(dc_path)
-    # re_pattern.extract_concept(corpus_path, extracted_sentence_path)
-    # #
-    # # # Extract topic pairs and save as dataframe
-    # stanza_pattern = Stanza_Pattern()
-    # stanza_pattern.process(extracted_sentence_path, extracted_topic_pairs_path)
+    re_pattern = Pattern(dc_path)
+    re_pattern.extract_concept(corpus_path, extracted_sentence_path)
+    
+    # Extract topic pairs and save as dataframe
+    stanza_pattern = Stanza_Pattern()
+    stanza_pattern.process(extracted_sentence_path, extracted_topic_pairs_path)
 
     # Filter
     filter = Filter()
