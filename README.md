@@ -6,9 +6,9 @@ RUN main.py to process the german model
 ## 1. Extracted the sentences containing our topic plus patterns
 There are 3 parameters:
 ---------------------------------------
-1.dc_path: The path of dataframe of the debate concepts (DC)
-2.corpus_path: The path of folder of our german corpus. There are about 25000 txt files in the folder. The corpus can be found at 
-3.extracted_sentence_path: Where to save the dictionary of all the extracted sentences
+1. dc_path: The path of dataframe of the debate concepts (DC)
+2. corpus_path: The path of folder of our german corpus. There are about 25000 txt files in the folder. The corpus can be found at 
+3. extracted_sentence_path: Where to save the dictionary of all the extracted sentences
 ## 2. Extracted expansion concepts (EC) from previous extraceted sentences
 There are 2 parameters:
 ---------------------------------------
