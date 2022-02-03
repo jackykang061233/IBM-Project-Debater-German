@@ -31,12 +31,12 @@ There are 4 parameters:
 
 
 # Also important
-## Statified embedding
+## In satified_Word2vec_de.py
 There are 2 parameters:
 1. lemma_de: A dictionary of words and their lemma. See expansion_label_de_lemmas.txt in folder example files
 2. embedding: A dictionary of words and their embeddings. See german_embedding.txt in folder example files
 
-## HelpFunctions_de
+## In HelpFunctions_de.py
 In class Word2vec there are two parameters to be changed:
 1. tokenization: A dictionary of topics and their tokenizations. See de_topic_tokenization.txt in folder example files
 2. lemma: A dictionary of words and their lemma. See expansion_label_de_lemmas.txt in folder example files
