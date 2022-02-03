@@ -12,6 +12,9 @@ There are 3 parameters:
 There are 2 parameters:
 1. extracted_sentence_path: The dictionary saved from previous step
 2. extracted_topic_pairs_path: A dataframe of where to save the dictionary of all the extracted topic pairs (DC and EC)
+
+Since first two steps take much time, it's also convenient to use concept_de.csv in folder example files
+
 ## 3. Filter
 There are 5 parameters:
 1. embedding: Which word embedding is being used, fasttext, spacy, or statified. 
