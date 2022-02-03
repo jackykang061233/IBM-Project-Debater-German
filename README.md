@@ -29,6 +29,7 @@ There are 4 parameters:
 3. label_en: See expansion_label_en.csv in folder example files
 4. model: Which classification model is being used, logistic regression or decision trees.
 
+You can also skip the first 2 steps cause it takes time. Instead use the file concept_de.csv in folder example files.
 
 # Also important
 ## In satified_Word2vec_de.py
@@ -42,5 +43,6 @@ In class Word2vec there are two parameters to be changed:
 2. lemma: A dictionary of words and their lemma. See expansion_label_de_lemmas.txt in folder example files
 
 In class Wordnet_de, for the germanet please contact germanetinfo@sfs.uni-tuebingen.de. 
+
 
 
