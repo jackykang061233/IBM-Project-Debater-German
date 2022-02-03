@@ -13,7 +13,7 @@ There are 2 parameters:
 1. extracted_sentence_path: The dictionary saved from previous step
 2. extracted_topic_pairs_path: A dataframe of where to save the dictionary of all the extracted topic pairs (DC and EC)
 
-Since first two steps take much time, it's also convenient to use concept_de.csv in folder example files
+## Since first two steps take much time, it's also convenient to use concept_de.csv in folder example files
 
 ## 3. Filter
 There are 5 parameters:
@@ -31,8 +31,6 @@ There are 4 parameters:
 2. label_de: See expansion_label_de.csv in folder example files
 3. label_en: See expansion_label_en.csv in folder example files
 4. model: Which classification model is being used, logistic regression or decision trees.
-
-##You can also skip the first 2 steps cause it takes time. Instead use the file concept_de.csv in folder example files.
 
 # Also important
 ## In satified_Word2vec_de.py
