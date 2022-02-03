@@ -17,7 +17,6 @@ if __name__ == '__main__':
     # Filter
     frequency_dict = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/final_frequency.pkt"
     sentiment_path = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt"
-    embedding_path = 'cc.de.300.bin'
 
     wiki_cat = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt"
     wiki_link = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt"
@@ -38,7 +37,7 @@ if __name__ == '__main__':
 
     # Filter
     filter = Filter()
-    de = filter.processing('fasttext', extracted_topic_pairs_path, corpus_path, frequency_dict, embedding_path)
+    de = filter.processing('fasttext', extracted_topic_pairs_path, corpus_path, frequency_dict)
     de = filter.filter(de, frequency_dict)
 
     # FEATURE
