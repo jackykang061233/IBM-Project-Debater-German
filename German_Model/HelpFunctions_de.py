@@ -41,7 +41,7 @@ class Word2vec:
         This method returns the cosine similarity of two vectors. Because that the definition of spatial.distance.cosine
         is 1 - cosine similarity we have to do 1 - spatial.distance.cosine = 1-(1-cosine similarity) = cosine similarity
     """
-    def __init__(self, df, lang='de'):
+    def __init__(self, df, tokenization, lemma, lang='de'):
         """
         Parameters
         ----------
@@ -59,12 +59,16 @@ class Word2vec:
         self.df = df
         if lang == 'de':
             self.nlp = spacy.load('de_core_news_sm')
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/de_topic_tokenization.txt", 'rb') as f:
+        with open(tokenization, 'rb') as f:
             self.tokenization = pickle.load(f)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt", 'rb') as f:
+        with open(lemma, 'rb') as f:
             self.lemma = pickle.load(f)
+        # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/de_topic_tokenization.txt", 'rb') as f:
+        #     self.tokenization = pickle.load(f)
+        # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt", 'rb') as f:
+        #     self.lemma = pickle.load(f)
 
-    def embedding_fasttext(self, model='/Users/kangchieh/Downloads/Bachelorarbeit/cc.de.100.bin'):
+    def embedding_fasttext(self, model):
         """
         This method applies fasttext to get the word embeddings
 
@@ -105,7 +109,7 @@ class Word2vec:
                 word2vec[EC] = self.nlp(EC).vector
         return word2vec
 
-    def embedding_statified(self, embedding="/Users/kangchieh/Downloads/Bachelorarbeit/statified word embedding/german_embedding.txt"):
+    def embedding_statified(self, embedding):
         """
         This method applies loads the predefined statified contextualized word embeddings
 

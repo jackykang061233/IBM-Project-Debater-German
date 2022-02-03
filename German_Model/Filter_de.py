@@ -141,7 +141,7 @@ class Filter:
 
         return df
 
-    def distributional_similarity(self, df, embedding):
+    def distributional_similarity(self, df, embedding, embedding_path):
         """
         This function calculates the distributional similarity between DC and EC
 
@@ -151,6 +151,8 @@ class Filter:
             a dataframe with topic pairs
         embedding: String
             there are three different embeddings that could be chosen: fasttext, spacy or statified
+        embedding_path: String
+            the location of the embedding
         """
         # df.loc[:, 'distributional_similarity'] = 0.0  # initialization
         dc_embedding = []
@@ -162,9 +164,9 @@ class Filter:
         if embedding == 'spacy':
             word2vec = w.embedding_spacy()
         elif embedding == 'fasttext':
-            word2vec = w.embedding_fasttext()
+            word2vec = w.embedding_fasttext(embedding_path)
         elif embedding == 'statified':
-            word2vec = w.embedding_statified()
+            word2vec = w.embedding_statified(embedding_path)
         else:
             raise Exception('Embedding not found!!')
 
@@ -197,7 +199,7 @@ class Filter:
 
         return df
 
-    def processing(self, embedding, df_path, corpus_path, dict_freq_path):
+    def processing(self, embedding, df_path, corpus_path, dict_freq_path, embedding_path):
         """
         This function processes all the filters at once
 
@@ -211,13 +213,15 @@ class Filter:
             the path of folder of our corpus
         dict_freq_path: Dictionary
             the path of a dictionary of saved words and their frequencies in the corpus
+        embedding_path: String
+            the location of the embedding
         """
         df = pd.read_csv(df_path, index_col=0)
         preprocess = self.preprocess(df)
         stop_word = self.stop_word(preprocess)
         substring = self.substring(stop_word)
         # named_entity = self.named_entity(substring)
-        dsimilarity = self.distributional_similarity(substring, embedding)
+        dsimilarity = self.distributional_similarity(substring, embedding, embedding_path)
 
         frequency = self.frequency_ratio(dsimilarity, corpus_path, dict_freq_path)
 
