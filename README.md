@@ -29,6 +29,8 @@ There are 4 parameters:
 3. label_en: See expansion_label_en.csv in folder example files
 4. model: Which classification model is being used, logistic regression or decision trees.
 
+
+# Also important
 ## Statified embedding
 There are 2 parameters:
 1. lemma_de: A dictionary of words and their lemma. See expansion_label_de_lemmas.txt in folder example files
