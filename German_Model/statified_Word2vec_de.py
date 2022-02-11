@@ -41,7 +41,7 @@ class statified_word2vec:
         embedding:
             a dictionary of words and their embeddings
         """
-        self.lemma_de = pickle.load(open(lemma_path, "rb"))
+        self.lemma_de = lemma_path
         self.embedding = pickle.load(open(embedding_path, "rb"))
 
     def fasttext_like_embedding(self, words):
@@ -148,9 +148,7 @@ class statified_word2vec:
 
 
 if __name__ == "__main__":
-    s = statified_word2vec("/Users/kangchieh/Downloads/Bachelorarbeit/statified word embedding/german_embedding.txt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt")
-    words = ['schlecht', 'Todesstrafe']
-    print(s.average_embedding(words))
+    pass
     # a = np.array([1, 2, 3])
     # print(s.l2_norm(a))
 

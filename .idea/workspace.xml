@@ -4,10 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4a05144e-71c8-410e-87c6-89f260e7577f" name="Changes" comment="Final version">
+    <list default="true" id="4a05144e-71c8-410e-87c6-89f260e7577f" name="Changes" comment="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;main.py">
+      <change afterPath="$PROJECT_DIR$/German_Model/example_files/concept_de.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/German_Model/example_files/de_topic_tokenization.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/German_Model/example_files/expansion_label_de_lemmas.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/German_Model/example_files/german_embedding.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/German_Model/Filter_de.py" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/Filter_de.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/German_Model/Feature_de.py" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/Feature_de.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/German_Model/HelpFunctions_de.py" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/HelpFunctions_de.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/German_Model/RE_Pattern.py" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/RE_Pattern.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/German_Model/Stanza_Pattern.py" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/Stanza_Pattern.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/German_Model/statified_Word2vec_de.py" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/statified_Word2vec_de.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/concept_de.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/de_topic_tokenization.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/expansion_label_de.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/expansion_label_de_lemmas.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/expansion_label_en.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/final_frequency.pkt" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/example_files/final_frequency.pkt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/german_embedding.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/sentiment_de.pkt" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/example_files/sentiment_de.pkt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example files/topic.csv" beforeDir="false" afterPath="$PROJECT_DIR$/German_Model/example_files/topic.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,7 +68,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -288,7 +304,21 @@
       <option name="project" value="LOCAL" />
       <updated>1643834129905</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Final version">
+      <created>1643900990699</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1643900990699</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;main.py">
+      <created>1643901066605</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1643901066605</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -311,6 +341,23 @@
     <MESSAGE value="1/29 uploaded" />
     <MESSAGE value="1/31 uploaded" />
     <MESSAGE value="Final version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Final version" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;main.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;main.py" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>41</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>45</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

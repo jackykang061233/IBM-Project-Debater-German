@@ -5,28 +5,28 @@ from German_Model.Filter_de import Filter
 from German_Model.Feature_de import GetFeature
 from Training import Training
 
+import pandas as pd
 if __name__ == '__main__':
     # PARAMETERS
     # RE_Pattern
-    dc_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic.csv'
-    corpus_path = '/Users/kangchieh/Downloads/Bachelorarbeit/corpus_de/'
-    extracted_sentence_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/final.txt'
+    dc_path = 'German_Model/example_files/topic.csv'
+    corpus_path = 'PATH TO CORPUS (SEE README.md)'
+    extracted_sentence_path = 'PATH TO SAVE THE FILE'
     # Stanza_Pattern
-    #extracted_topic_pairs_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/final_topic_pairs.csv'
-    extracted_topic_pairs_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/cleaned_concept_wiki_de.csv'
+    extracted_topic_pairs_path = 'German_Model/example_files/concept_de.csv'
+    #extracted_topic_pairs_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/cleaned_concept_wiki_de.csv'
     # Filter
-    frequency_dict = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency_de/final_frequency.pkt"
-    sentiment_path = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt"
-    embedding_path = "cc.de.100.bin" #fasttext
+    frequency_dict = "German_Model/example_files/final_frequency.pkt"
+    sentiment_path = "German_Model/example_files/sentiment_de.pkt"
+    embedding_path = "German_Model/example_files/german_embedding.txt"  # statified
+    #embedding_path = "PATH TO FASTTEXT EMBEDDING (SEE README.md to download)"  # fasttext
+    germanet_path = "/Users/kangchieh/Downloads/Bachelorarbeit/germanet/GN_V160/GN_V160_XML"  # PLEAS ADJUST TO YOUR PATH
 
-    wiki_cat = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt"
-    wiki_link = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt"
-    
     # Training
-    label_de = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de.csv"
-    label_en = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv"
+    label_de = "Label/expansion_label_de.csv"
+    label_en = "Label/expansion_label_en.csv"
     
-    
+
     # PROCESSING
     # Extract sentences containing pattern
     # re_pattern = Pattern(dc_path)
@@ -38,12 +38,12 @@ if __name__ == '__main__':
 
     # Filter
     filter = Filter()
-    de = filter.processing('fasttext', extracted_topic_pairs_path, corpus_path, frequency_dict, embedding_path)
+    de = filter.processing('statified', extracted_topic_pairs_path, corpus_path, frequency_dict, embedding_path)
     de = filter.filter(de, frequency_dict)
 
     # FEATURE
     feature = GetFeature()
-    feature_de = feature.processing(de, sentiment_path)
+    feature_de = feature.processing(de, germanet_path, sentiment_path)
 
     # TRAINING
     training = Training(feature_de, 'de', label_de, label_en)

@@ -41,7 +41,7 @@ class Word2vec:
         This method returns the cosine similarity of two vectors. Because that the definition of spatial.distance.cosine
         is 1 - cosine similarity we have to do 1 - spatial.distance.cosine = 1-(1-cosine similarity) = cosine similarity
     """
-    def __init__(self, df, tokenization, lemma, lang='de'):
+    def __init__(self, df, lang='de'):
         """
         Parameters
         ----------
@@ -51,22 +51,14 @@ class Word2vec:
             the language for word embedding model
         nlp:
             the nlp library from spacy
-        tokenization:
-            a dictionary of sentences and their tokens
-        lemma:
-            a dictionary of words and their lemma
         """
         self.df = df
         if lang == 'de':
             self.nlp = spacy.load('de_core_news_sm')
-        with open(tokenization, 'rb') as f:
+        with open("German_Model/example_files/de_topic_tokenization.txt", 'rb') as f:
             self.tokenization = pickle.load(f)
-        with open(lemma, 'rb') as f:
+        with open("German_Model/example_files/expansion_label_de_lemmas.txt", 'rb') as f:
             self.lemma = pickle.load(f)
-        # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/de_topic_tokenization.txt", 'rb') as f:
-        #     self.tokenization = pickle.load(f)
-        # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt", 'rb') as f:
-        #     self.lemma = pickle.load(f)
 
     def embedding_fasttext(self, model):
         """
@@ -124,13 +116,13 @@ class Word2vec:
             DC, EC = self.df.at[i, 'DC'], self.df.at[i, 'EC']
             if DC not in word2vec:  # initialize if DC not exists
                 try:
-                    token_lemma_dc = [dc for dc in self.tokenization[DC]]  # get lemma of DC
+                    token_lemma_dc = [self.lemma[dc] for dc in self.tokenization[DC]]  # get lemma of DC
                     word2vec[DC] = s.fasttext_like_embedding(token_lemma_dc)
                 except:  # if some word embedding not exists then return zero vectors
                     word2vec[DC] = np.zeros(768)
             if EC not in word2vec:  # initialize if EC not exists
                 try:
-                    token_lemma_ec = [ec for ec in self.tokenization[EC]]  # get lemma of EC
+                    token_lemma_ec = [self.lemma[ec] for ec in self.tokenization[EC]]  # get lemma of EC
                     word2vec[EC] = s.fasttext_like_embedding(token_lemma_ec)
                 except:  # if some word embedding not exists then return zero vectors
                     word2vec[EC] = np.zeros(768)
@@ -153,6 +145,8 @@ class Word2vec:
         float:
             the cosine similarity of two vectors
         """
+        if np.all((vec1 == 0)) or np.all((vec2 == 0)):
+            return 0
         return 1 - spatial.distance.cosine(vec1, vec2)
 
 
@@ -182,19 +176,21 @@ class Wordnet_de:
     processing:
        This method processes all the methods
     """
-    def __init__(self, df):
+    def __init__(self, df, path):
         """
         Parameters
         ----------
         df:
             a dataframe of pairs DC and EC
+        path:
+            path to germanet folder
         relation:
             an initialized dataframe initialized for the class
         """
         self.df = df
         self.relation = pd.DataFrame(0, index=df.index, columns=['hypernym', 'hyponym', 'co-hypernym', 'synonym'])
         self.relation = pd.concat([self.df, self.relation], axis=1)
-        self.germanet = Germanet("/Users/kangchieh/Downloads/Bachelorarbeit/germanet/GN_V160/GN_V160_XML")
+        self.germanet = Germanet(path)
 
     def get_synset(self):
         """ This method returns the synset of DC and EC. Synset : a set of synonyms that share a common meaning """

@@ -268,8 +268,6 @@ class Stanza_Pattern:
 
        """
         list_rows = []
-        # with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de.pkt", "rb") as f:
-        #     extracted_sentences = pickle.load(f)
         with open(extracted_sentence_path, "rb") as f:
             extracted_sentences = pickle.load(f)
         for dc, sentences in extracted_sentences.items():

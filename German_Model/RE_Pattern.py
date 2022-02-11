@@ -11,7 +11,6 @@ from os import listdir
 from os.path import isfile, join
 
 
-
 class Pattern:
     """
     This class is aimed to find the pattern of the potential extraction candidates and extract the EC from the matched

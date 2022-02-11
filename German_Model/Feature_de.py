@@ -41,7 +41,7 @@ class GetFeature:
     #     df['shared_links'] = df.apply(lambda row: link.get((row.DC, row.EC)), axis=1)
     #     return df
 
-    def get_wordnet(self, df):
+    def get_wordnet(self, df, path):
         """
         This method gets the four features from Germanet
 
@@ -55,7 +55,7 @@ class GetFeature:
         Dataframe
             the input dataframe plus the training features from Germanet
         """
-        w = Wordnet_de(df)
+        w = Wordnet_de(df, path)
         df_wordnet = w.processing()
         return df_wordnet
 
@@ -110,7 +110,7 @@ class GetFeature:
         df['EC_embedding'] = ec_embedding
         return df
 
-    def processing(self, df, sentiment_path=None):
+    def processing(self, df, germanet_path, sentiment_path=None):
         """
         This method performs the final processing of get the training features
 
@@ -126,7 +126,7 @@ class GetFeature:
         Dataframe
             the dataframe plus the word embedding of every topic
         """
-        wordnet = self.get_wordnet(df)
+        wordnet = self.get_wordnet(df, germanet_path)
         final_result = self.get_sentiment(wordnet, sentiment_path)
 
         final_result['freq_ratio'] = final_result.apply(
