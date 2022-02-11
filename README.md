@@ -28,8 +28,8 @@ There are 1 parameter:
 ## 5. Training
 There are 4 parameters:
 1. lang: The language of the training
-2. label_de: See expansion_label_de.csv in folder example files
-3. label_en: See expansion_label_en.csv in folder example files
+2. label_de: See expansion_label_de.csv in folder Label
+3. label_en: See expansion_label_en.csv in folder Label
 4. model: Which classification model is being used, logistic regression or decision trees.
 
 # Also important
