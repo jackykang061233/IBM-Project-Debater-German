@@ -78,9 +78,9 @@ class GetFeature_en:
     def get_wiki(self, df, path_cat, path_link):
         w = Wiki(df)
         w.processing(path_cat, path_link)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_en.pkt", "rb") as f:
+        with open("wiki_concept/wiki/cat_en.pkt", "rb") as f:
             cat = pickle.load(f)
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_en.pkt", "rb") as f:
+        with open("wiki_concept/wiki/link_en.pkt", "rb") as f:
             link = pickle.load(f)
         df['shared_categories'] = df.apply(lambda row: cat.get((row.DC, row.EC)), axis=1)
         df['shared_links'] = df.apply(lambda row: link.get((row.DC, row.EC)), axis=1)
@@ -113,7 +113,7 @@ class GetFeature_en:
                 if topic not in sentiment:
                     sentiment[topic] = self.sentiment(topic)
 
-        file = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment_v1.pkt", "wb")
+        file = open("wiki_concept/sentiment_v1.pkt", "wb")
         pickle.dump(sentiment, file)
         file.close()
         # df['DC_Polarity'] = df['DC'].apply(self.sentiment)
@@ -211,7 +211,7 @@ class Training_en:
             Y is predefined as None but will later be assigned to our output target
         """
         self.df = df
-        self.label = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_ㄙ.csv", index_col=0)
+        self.label = pd.read_csv("wiki_concept/expansion_label_ㄙ.csv", index_col=0)
         self.load_from_path = load_from_path
         self.new_df = None
         self.X, self.y = None, None
@@ -392,18 +392,18 @@ class Training_en:
 if __name__ == "__main__":
     # data = pardata.load_dataset('wikipedia_oriented_relatedness')
     # print(data)
-    with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_en.pkt",
+    with open("wiki_concept/wiki/cat_en.pkt",
               "rb") as f:
         a = pickle.load(f)
     print(a)
-    # df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/sim=0.2_freq=0.01.csv", index_col=0)
+    # df = pd.read_csv("wiki_concept/filter/sim=0.2_freq=0.01.csv", index_col=0)
     # df = df.reset_index(drop=True)
-    # #df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training/v1.csv", index_col=0)
-    # df = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training/v1_sim=0.2.csv', index_col=0)
+    # #df = pd.read_csv("wiki_concept/training/v1.csv", index_col=0)
+    # df = pd.read_csv('wiki_concept/training/v1_sim=0.2.csv', index_col=0)
 
     # g = GetFeature(df)
     # df1 = g.processing()
-    # df1.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/training/v1_sim=0.2.csv")
+    # df1.to_csv("wiki_concept/training/v1_sim=0.2.csv")
 
     # t = Training(df)
     # t.cleaning_data()
