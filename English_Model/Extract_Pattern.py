@@ -45,7 +45,7 @@ class Pattern:
 
     def __init__(self):
         self.spacy = spacy.load("en_core_web_sm")  # spacy postag
-        self.dc = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic_with_outlinks.csv',
+        self.dc = pd.read_csv('wiki_concept/topic_with_outlinks.csv',
                               converters={'outlinks': eval}, index_col=0)
         # self.consistent_pattern = [r' is a)\b((\s*\w+\-*\'*){1,10})',
         #                            r' is an)\b((\s*\w+\-*\'*){1,10})',
@@ -90,7 +90,7 @@ class Pattern:
             for outlink in outlinks:
                 try:
                     text = open(
-                        "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles/" + outlink + ".txt",
+                        "wiki_concept/wiki_titles/" + outlink + ".txt",
                         "r").read()
                     for pattern in self.consistent_pattern:
                         concept_pattern = r'(' + concept.lower() + pattern  # create pattern from main topic
@@ -111,7 +111,7 @@ class Pattern:
              
             topic[concept] = list(set(topic[concept]))  # delete duplicates
 
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_re_en.pkt", "wb") as f:
+        with open("wiki_concept/concept_re_en.pkt", "wb") as f:
             pickle.dump(topic, f)
 
     def get_EC(self, data):
@@ -132,7 +132,7 @@ class Pattern:
                         df.loc[df.shape[0]] = [key, ec, v]  # Added at the bottom of the df
                     last_ec = ec
 
-        df.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_con.csv")
+        df.to_csv("wiki_concept/concept_wiki_con.csv")
 
     def find_synonym(self):
         """
@@ -140,7 +140,7 @@ class Pattern:
         """
         synonym = {}
         for concept in self.dc.index.values:
-            text = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles/" + concept + ".txt",
+            text = open("wiki_concept/wiki_titles/" + concept + ".txt",
                         "r").read()
             pattern = concept.lower() + r'(, also known as)\b((\s*\w+\-*)*)'  # our pattern also known as
             match = self.re_match(pattern, text.lower())
