@@ -60,7 +60,7 @@ class Experiment:
 
         # FEATURE
         feature = GetFeature()
-        # "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt","/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt"
+        # "wiki_concept/wiki/cat_de.pkt","wiki_concept/wiki/link_de.pkt"
         feature_de = feature.processing(de, self.german_sentiment)
 
         # TRAINING
@@ -143,7 +143,7 @@ class Experiment:
         """This method compares the result of translating first and extract patterns first"""
         # translate extraction patterns into german
         with open(
-                '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/translated/topic_translation_LiberTranslate.txt',
+                'wiki_concept/translated/topic_translation_LiberTranslate.txt',
                 'rb') as f:
             translate = pickle.load(f)
         translated_df_de = pd.DataFrame(df_en['DC'].apply(lambda x: translate[x]))
@@ -171,11 +171,11 @@ class Experiment:
     #     fairseq = self.df_en
     #     libre = self.df_en
     #     #  TRANSLATION
-    #     with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/translated/topic_translation_fairseq.txt",
+    #     with open("wiki_concept/translated/topic_translation_fairseq.txt",
     #               "rb") as f:
     #         fairseq_dict = pickle.load(f)
     #     with open(
-    #             "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/translated/topic_translation_LiberTranslate.txt",
+    #             "wiki_concept/translated/topic_translation_LiberTranslate.txt",
     #             "rb") as f:
     #         libre_dict = pickle.load(f)
     #
@@ -196,13 +196,13 @@ class Experiment:
     #     feature = GetFeature()
     #
     #     feature_fairseq = feature.processing(fairseq_filter,
-    #                                        "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt",
-    #                                        "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt",
-    #                                        "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt")
+    #                                        "wiki_concept/sentiment/sentiment_de.pkt",
+    #                                        "wiki_concept/wiki/cat_de.pkt",
+    #                                        "wiki_concept/wiki/link_de.pkt")
     #     feature_libre = feature.processing(libre_filter,
-    #                                           "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt",
-    #                                           "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt",
-    #                                           "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt")
+    #                                           "wiki_concept/sentiment/sentiment_de.pkt",
+    #                                           "wiki_concept/wiki/cat_de.pkt",
+    #                                           "wiki_concept/wiki/link_de.pkt")
     #
     #     # TRAINING
     #     training = Training(feature_fairseq, False, 'en')
@@ -220,8 +220,8 @@ class Experiment:
     #     # FEATURE
     #     feature = GetFeature()
     #
-    #     feature_sim_02 = feature.processing(sim_02_filter, "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt")
-    #     feature_sim_03 = feature.processing(sim_03_filter, "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt")
+    #     feature_sim_02 = feature.processing(sim_02_filter, "wiki_concept/sentiment/sentiment_de.pkt", "wiki_concept/wiki/cat_de.pkt", "wiki_concept/wiki/link_de.pkt")
+    #     feature_sim_03 = feature.processing(sim_03_filter, "wiki_concept/sentiment/sentiment_de.pkt", "wiki_concept/wiki/cat_de.pkt", "wiki_concept/wiki/link_de.pkt")
     #
     #     # TRAINING
     #     training = Training(feature_sim_02, False, 'de')
@@ -239,8 +239,8 @@ class Experiment:
     #     # FEATURE
     #     feature = GetFeature()
     #
-    #     feature_spacy = feature.processing(spacy_filter, "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt")
-    #     feature_fasttext = feature.processing(fasttext_filter, "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt", "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt")
+    #     feature_spacy = feature.processing(spacy_filter, "wiki_concept/sentiment/sentiment_de.pkt", "wiki_concept/wiki/cat_de.pkt", "wiki_concept/wiki/link_de.pkt")
+    #     feature_fasttext = feature.processing(fasttext_filter, "wiki_concept/sentiment/sentiment_de.pkt", "wiki_concept/wiki/cat_de.pkt", "wiki_concept/wiki/link_de.pkt")
     #
     #     # TRAINING
     #     training = Training(feature_spacy, False, 'de')
@@ -260,14 +260,14 @@ class Experiment:
     #     feature = GetFeature()
     #
     #     feature_english = feature_en.processing(en,
-    #                                        "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment_v1.pkt",
-    #                                     "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_en.pkt",
-    #                                     "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_en.pkt"
+    #                                        "wiki_concept/sentiment_v1.pkt",
+    #                                     "wiki_concept/wiki/cat_en.pkt",
+    #                                     "wiki_concept/wiki/link_en.pkt"
     #                                        )
     #     feature_de = feature.processing(de,
-    #                                           "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/sentiment/sentiment_de.pkt",
-    #                                           "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_de.pkt",
-    #                                           "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_de.pkt")
+    #                                           "wiki_concept/sentiment/sentiment_de.pkt",
+    #                                           "wiki_concept/wiki/cat_de.pkt",
+    #                                           "wiki_concept/wiki/link_de.pkt")
     #
     #     # TRAINING
     #     training = Training(feature_english, False, 'en')
@@ -276,17 +276,17 @@ class Experiment:
 
 if __name__ == "__main__":
     input('f')
-    # df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de_v2.csv",
+    # df = pd.read_csv("wiki_concept/concept_de/concept_wiki_de_v2.csv",
     #                  index_col=0)
     df_en_path = ''
     df_de_path = ''
-    df_en = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept/concept.csv",
+    df_en = pd.read_csv("wiki_concept/concept/concept.csv",
                         index_col=0)
-    df_de = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de.csv",
+    df_de = pd.read_csv("wiki_concept/expansion_label_de.csv",
                         index_col=0)
 
     experiment = Experiment(df_en=df_en, df_de=df_de)
     experiment.en_de_final()
-    # df_en = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_en.csv",
+    # df_en = pd.read_csv("wiki_concept/expansion_label_en.csv",
     # index_col=0)
 
