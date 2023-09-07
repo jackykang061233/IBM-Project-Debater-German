@@ -12,15 +12,17 @@ if __name__ == '__main__':
     dc_path = 'German_Model/example_files/topic.csv'
     corpus_path = 'PATH TO CORPUS (SEE README.md)'
     extracted_sentence_path = 'PATH TO SAVE THE FILE'
+    
     # Stanza_Pattern
     extracted_topic_pairs_path = 'German_Model/example_files/concept_de.csv'
-    #extracted_topic_pairs_path = '/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/cleaned_concept_wiki_de.csv'
+   
     # Filter
     frequency_dict = "German_Model/example_files/final_frequency.pkt"
     sentiment_path = "German_Model/example_files/sentiment_de.pkt"
     embedding_path = "German_Model/example_files/german_embedding.txt"  # statified
     #embedding_path = "PATH TO FASTTEXT EMBEDDING (SEE README.md to download)"  # fasttext
-    germanet_path = "/Users/kangchieh/Downloads/Bachelorarbeit/germanet/GN_V160/GN_V160_XML"  # PLEAS ADJUST TO YOUR PATH
+    
+    germanet_path = "germanet/GN_V160/GN_V160_XML"  # PLEAS ADJUST TO YOUR PATH
 
     # Training
     label_de = "Label/expansion_label_de.csv"
