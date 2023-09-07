@@ -54,7 +54,7 @@ class Filter_en:
     def frequency_ratio(self, df, dict_freq=None):
         """ This function calculates the frequency of a word"""
         Concept = list(set(list(df.DC.values) + list(df.EC.values)))
-        path = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles/"
+        path = "wiki_concept/wiki_titles/"
         files = [f for f in listdir(path) if isfile(join(path, f))]  # get all the files in the folder wiki titles
         if dict_freq == None:  # no existing frequency dictionary
             df['DC_freq'] = 0
@@ -96,7 +96,7 @@ class Filter_en:
 
                     frequency_counter[concept] = counter
 
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency/frequency_v2.pkt",
+        with open("wiki_concept/frequency/frequency_v2.pkt",
                   "wb") as f:
             pickle.dump(frequency_counter, f)
 
@@ -153,14 +153,14 @@ class Filter_en:
         substring = self.substring(stop_word)
         #named_entity = self.named_entity(substring)
         dsimilarity = self.distributional_similarity(substring, embedding)
-        frequency = self.frequency_ratio(dsimilarity, "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency/frequency_v2.pkt")
-        #frequency.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/filter_v1.csv")
+        frequency = self.frequency_ratio(dsimilarity, "wiki_concept/frequency/frequency_v2.pkt")
+        #frequency.to_csv("wiki_concept/filter/filter_v1.csv")
 
         return frequency
 
-    def filter(self, df, freq=0.01, dsim=0.2, path="/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency/frequency_v2.pkt"):
+    def filter(self, df, freq=0.01, dsim=0.2, path="wiki_concept/frequency/frequency_v2.pkt"):
         """ This function filters our given input and return only the ones that fit our criteria"""
-        #df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/filter_v1.csv", index_col=0)
+        #df = pd.read_csv("wiki_concept/filter/filter_v1.csv", index_col=0)
         with open(path, "rb") as f:
             frequency = pickle.load(f)
 
@@ -181,10 +181,10 @@ class Filter_en:
         result = result.reset_index(drop=True)
         return result
 
-    def filter_statistic(self, df, freq=0.01, dsim=0.3, path="/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/frequency/frequency_v2.pkt"):
+    def filter_statistic(self, df, freq=0.01, dsim=0.3, path="wiki_concept/frequency/frequency_v2.pkt"):
         """ This function filters our given input and return only the ones that fit our criteria"""
         # df = self.processing()
-        #df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/filter_v1.csv", index_col=0)
+        #df = pd.read_csv("wiki_concept/filter/filter_v1.csv", index_col=0)
         with open(path, "rb") as f:
             frequency = pickle.load(f)
         for key, value in frequency.items():
@@ -213,7 +213,7 @@ class Filter_en:
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept/concept_v1.csv", index_col=0)
+    df = pd.read_csv("wiki_concept/concept/concept_v1.csv", index_col=0)
     f = Filter_en(df)
     f.filter_statistic()
     # # df = f.processing()
@@ -221,9 +221,9 @@ if __name__ == "__main__":
     # df1 = f.filter()
     #
     #
-    #df1.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/filter/sim=0.2_freq=0.01.csv")
+    #df1.to_csv("wiki_concept/filter/sim=0.2_freq=0.01.csv")
 
-    # path = "/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles/"
+    # path = "wiki_concept/wiki_titles/"
     # files = [f for f in listdir(path) if isfile(join(path, f))]  # get all the files in the folder wiki titles
     # words_length = 0
     #
