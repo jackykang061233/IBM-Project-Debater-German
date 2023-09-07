@@ -7,10 +7,10 @@ import numpy as np
 class Statified_Word2vec:
     def __init__(self):
         self.lemma_de = self.get_lemma()
-        self.embedding = pickle.load(open("/Users/kangchieh/Downloads/Bachelorarbeit/statified word embedding/german_embedding.txt", "rb"))
+        self.embedding = pickle.load(open("statified word embedding/german_embedding.txt", "rb"))
 
     def get_lemma(self):
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/expansion_label_de_lemmas.txt", 'rb') as f:
+        with open("wiki_concept/expansion_label_de_lemmas.txt", 'rb') as f:
             lemma = pickle.load(f)
         return lemma
 
@@ -75,8 +75,6 @@ if __name__ == "__main__":
     s = Statified_Word2vec()
     words = ['schlecht', 'Todesstrafe']
     print(s.average_embedding(words))
-    # a = np.array([1, 2, 3])
-    # print(s.l2_norm(a))
 
 
 
