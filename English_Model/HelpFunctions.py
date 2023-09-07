@@ -20,7 +20,7 @@ pd.set_option('display.max_columns', 10)
 class Word2vec:
     def __init__(self, df):
         self.df = df
-        self.model = '/Users/kangchieh/Downloads/Bachelorarbeit/cc.en.100.bin'
+        self.model = 'cc.en.100.bin'
         self.nlp = spacy.load('en_core_web_sm')
 
     def clean_sentence(self, sentence):
@@ -207,10 +207,10 @@ class Wiki:
                 shared_categories[(DC, EC)] = len(shared_cat)
                 shared_links[(DC, EC)] = len(shared_link)
 
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_en.pkt",
+            with open("wiki_concept/wiki/cat_en.pkt",
                       "wb") as f:
                 pickle.dump(shared_categories, f)
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_en.pkt",
+            with open("wiki_concept/wiki/link_en.pkt",
                       "wb") as f1:
                 pickle.dump(shared_links, f1)
 
@@ -235,16 +235,16 @@ class Wiki:
                     shared_categories[(DC, EC)] = len(shared_cat)
                     shared_links[(DC, EC)] = len(shared_link)
 
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/cat_en.pkt",
+            with open("wiki_concept/wiki/cat_en.pkt",
                       "wb") as f:
                 pickle.dump(shared_categories, f)
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki/link_en.pkt",
+            with open("wiki_concept/wiki/link_en.pkt",
                       "wb") as f1:
                 pickle.dump(shared_links, f1)
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_wiki_filter_number.csv", index_col=0)
+    df = pd.read_csv("wiki_concept/concept_wiki_filter_number.csv", index_col=0)
     # w = Wordnet(df)
     # df = w.processing()
     # wiki = Wiki(df)
