@@ -30,11 +30,11 @@ class wikiscraper:
     """
 
     def __init__(self):
-        self.dc = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic.csv',
+        self.dc = pd.read_csv('wiki_concept/topic.csv',
                               index_col=0)  # our main topics
         # Because that we get our column "outlinks" as a string, we use converters={'outlinks': eval} to convert
         # string to list
-        self.dc_outlink = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic_with_outlinks.csv',
+        self.dc_outlink = pd.read_csv('wiki_concept/topic_with_outlinks.csv',
                                       converters={'outlinks': eval}, index_col=0)
         self.wiki = wikipediaapi.Wikipedia('de')
 
@@ -45,7 +45,7 @@ class wikiscraper:
             page = self.wiki.page(dc)
             outlinks.append(list(page.links.keys()))
         self.dc['outlinks'] = outlinks
-        self.dc.to_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic_with_outlinks.csv')
+        self.dc.to_csv('wiki_concept/topic_with_outlinks.csv')
 
     def get_articles(self, title):
         """ This function gets the wiki page of a wiki topic"""
@@ -53,11 +53,11 @@ class wikiscraper:
         text = page.text
         print(text)
         try:
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles_de/" + title + ".txt", "w",
+            with open("wiki_concept/wiki_titles_de/" + title + ".txt", "w",
                       encoding="utf-8") as f:
                 f.write(text)
         except FileNotFoundError:  # in case that / occurs in the title
-            with open("/Users/kangchieh/Downloads/Bachelorarbeit/exception.txt", "a") as ex:
+            with open("exception.txt", "a") as ex:
                 ex.write(title + "\n")
                 ex.close()
 
@@ -82,7 +82,5 @@ class wikiscraper:
 if __name__ == "__main__":
     w = wikiscraper()
     w.get_articles("Waffenkontrolle (Recht)")
-    # print(w.dc_outlink.iloc[0, 0][0])
-    # df = pd.read_csv('/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/topic_with_outlinks.csv')
-    # print(df.iloc[0, -1])
+
 
