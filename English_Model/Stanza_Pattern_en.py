@@ -272,7 +272,7 @@ class Stanza_Pattern:
 
        """
         list_rows = []
-        with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_re_en.pkt", "rb") as f:
+        with open("wiki_concept/concept_re_en.pkt", "rb") as f:
             extracted_sentences = pickle.load(f)
         for dc, sentences in extracted_sentences.items():
             for pattern in self.pattern:
@@ -281,24 +281,24 @@ class Stanza_Pattern:
         extracted_sentences = pd.DataFrame(list_rows)
         print(extracted_sentences)
         extracted_sentences = self.clean_ec(extracted_sentences)
-        extracted_sentences.to_csv("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept/concept_v1.csv")
+        extracted_sentences.to_csv("wiki_concept/concept/concept_v1.csv")
 
 
 if __name__ == '__main__':
-    #text = open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/wiki_titles_de/" + "Waffenkontrolle (Recht)" + ".txt").read()
+    #text = open("wiki_concept/wiki_titles_de/" + "Waffenkontrolle (Recht)" + ".txt").read()
 
     # S = Stanza_Pattern()
     # S.process()
 
     # print(S.tokenization('Der Freiwilligendienst'))
-    with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept_de/concept_wiki_de.pkt", "rb") as f:
+    with open("wiki_concept/concept_de/concept_wiki_de.pkt", "rb") as f:
         extracted_sentences = pickle.load(f)
     a = []
     count = 0
     for key, value in extracted_sentences.items():
         for v in value:
             a.append(v)
-    with open("/Users/kangchieh/Downloads/Bachelorarbeit/wiki_concept/concept/concept_wiki_con_v4.pkt", "rb") as f:
+    with open("wiki_concept/concept/concept_wiki_con_v4.pkt", "rb") as f:
         extracted_sentences = pickle.load(f)
     L = LibreTranslateAPI()
     b = []
@@ -313,7 +313,7 @@ if __name__ == '__main__':
             else:
                 print("IN", translated)
 
-    with open("/Users/kangchieh/Downloads/Bachelorarbeit/not.pkt", "rb") as f:
+    with open("not.pkt", "rb") as f:
         pickle.dump(b, f)
     print(b)
 
