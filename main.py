@@ -7,7 +7,7 @@ from Training import Training
 
 import pandas as pd
 if __name__ == '__main__':
-    # PARAMETERS
+    ### PARAMETERS ###
     # RE_Pattern
     dc_path = 'German_Model/example_files/topic.csv'
     corpus_path = 'PATH TO CORPUS (SEE README.md)'
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     label_en = "Label/expansion_label_en.csv"
     
 
-    # PROCESSING
+    ### PROCESSING ###
     # Extract sentences containing pattern
     # re_pattern = Pattern(dc_path)
     # re_pattern.extract_concept(corpus_path, extracted_sentence_path)
